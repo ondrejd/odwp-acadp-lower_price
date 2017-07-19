@@ -10,7 +10,7 @@ __Plugin vyžaduje plugin [Advanced Classifieds & Directory Pro][2] - bez tohoto
 
 ## Poznámka k implementaci
 
-Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr> vytváří jsou rozšířené o hodnoty `price_orig`, `price_reduce` a `price_reduce_days` - na příklad řešení se podívejte na tento [Gist][5].
+Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr> vytváří, jsou rozšířené o hodnoty `price_orig`, `price_reduce` a `price_reduce_days`.
 
 ## Popis pluginu
 
@@ -23,5 +23,4 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 [2]: https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/
 [3]: https://nepotrebujem.eu/
 [4]: mailto:ondrejd@gmail.com
-[5]: about:blank
 
