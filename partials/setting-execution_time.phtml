@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Ondřej Doněk <ondrejd@gmail.com>
+ * @link https://github.com/ondrejd/odwp-acadp-lower_price for the canonical source repository
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
+ * @package odwp-acadp-lower_price
+ * @see ALP_Plugin::render_setting_debug_mode()
+ * @since 1.0.0
+ *
+ * Variables passed:
+ * @var string $debug_mode ['enable','disable']
+ */
+
+if( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+?>
+<select id="<?php echo ALP_SLUG ?>_settings_debug_mode" name="<?php echo ALP_SLUG ?>_settings[debug_mode]" value="<?php echo $debug_mode ?>">
+    <option value="enabled"<?php selected( $debug_mode, 'enabled' ) ?>><?php _e( 'Povolit', ALP_SLUG ) ?></option>
+    <option value="disabled"<?php selected( $debug_mode, 'disabled' ) ?>><?php _e( 'Zakázat', ALP_SLUG ) ?></option>
+</select>
