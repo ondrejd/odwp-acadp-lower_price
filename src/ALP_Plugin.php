@@ -66,7 +66,7 @@ class ALP_Plugin {
      */
     public static function get_default_options() {
         return [
-            'execution_time' => '01:00:00',
+            'execution_time' => '01:00',
         ];
     }
 
@@ -306,7 +306,7 @@ class ALP_Plugin {
      * @return void
      * @since 1.0.0
      */
-    protected static function print_admin_notice( $msg, $type = 'info', $dismissible = true ) {
+    public static function print_admin_notice( $msg, $type = 'info', $dismissible = true ) {
         $class = 'notice';
 
         if( in_array( $type, ['error','info','success','warning'] ) ) {
@@ -316,7 +316,7 @@ class ALP_Plugin {
         }
 
         if( $dismissible === true) {
-            $class .= ' s-dismissible';
+            $class .= ' is-dismissible';
         }
         
         printf( '<div class="%s"><p>%s</p></div>', $class, $msg );
@@ -342,6 +342,34 @@ class ALP_Plugin {
                     call_user_func( [ $screen, $method ] );
             }
         }
+    }
+
+    /**
+     * Returns array describing next scheduled event:
+     * <pre>
+     * ['next_scheduled' => '11:00', 'hours_left' => 1]
+     * </pre>
+     * @return array
+     * @since 1.0.0
+     */
+    public static function get_next_scheduled() {
+        $next = ALP_Plugin::get_option( 'execution_time' );
+        $next_txt = date( 'Y-m-d ' . $next . ':00' );
+        $next_obj = new DateTime( $next_txt );
+        $is_tomorrow = false;
+
+        if( time() > strtotime( $next_txt ) ) {
+            $is_tomorrow = true;
+            $next_obj->add( new DateInterval( 'P1D' ) );
+        }
+
+        $hours_left = $next_obj->diff( new DateTime )->format( '%h' );
+
+        return [
+            'next_scheduled' => $next,
+            'hours_left' => $hours_left,
+            'is_next_tomorrow' => $is_tomorrow,
+        ];
     }
 }
 

@@ -73,6 +73,38 @@ class ALP_Acadp_Items_Table_Item {
         $this->price_reduce_days = (int) $price_reduce_days;
         $this->price_orig        = (int) $price_orig;
     }
+
+    /**
+     * @return integer Final price (after reduce).
+     * @since 1.0.0
+     */
+    public function get_price_final() {
+        return ( (int) $this->price_orig / 100 ) * ( 100 - (int) $this->price_reduce );
+    }
+
+    /**
+     * @return integer Current price difference.
+     * @since 1.0.0
+     */
+    public function get_price_diff() {
+        return (int) $this->price_orig - (int) $this->price;
+    }
+
+    /**
+     * @return integer Final price difference.
+     * @since 1.0.0
+     */
+    public function get_price_diff_final() {
+        return $this->price_orig - $this->get_price_final();
+    }
+
+    /**
+     * @return integer Amount of day price reduce.
+     * @since 1.0.0
+     */
+    public function get_price_reduce_day() {
+        return $this->get_price_diff_final() / (int) $this->price_reduce_days;
+    }
 }
 
 endif;

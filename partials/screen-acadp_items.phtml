@@ -16,18 +16,37 @@ if( ! class_exists( 'ALP_Acadp_Items_Table' ) ) {
     require_once( DL_PATH . 'src/ALP_Acadp_Items_Table.php' );
 }
 
+/**
+ * @var ALP_Acadp_Items_Table $alp_acadp_items_table
+ */
 $alp_acadp_items_table = new ALP_Acadp_Items_Table();
 $alp_acadp_items_table->prepare_items();
+
+/**
+ * @var array $next
+ */
+$next = ALP_Plugin::get_next_scheduled();
+
+// TODO Tady se musí rozlišit zda proběhne dnes či zítra (pokud je už více hodin než je $time).
+$msg = __( 'Příští naplánované snížení cen proběhne dnes v <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
+$hours = ( $next['hours_left'] == 1 ) ? '1 hodinu' : ( ( $next['hours_left'] > 4 ) ? $next['hours_left'] . ' hodin' : $next['hours_left'] . ' hodiny' );
+
+if( $next['is_next_tomorrow'] ) {
+    $msg = __( 'Příští naplánované snížení cen proběhne zítra v <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
+}
+
+ALP_Plugin::print_admin_notice( sprintf( $msg, $next['next_scheduled'], $next['hours_left'] ), 'info', true );
 
 ?>
 <div class="wrap">
     <h1><?php _e( 'Přehled cen inzerátů', ALP_SLUG ) ?></h1>
-    <p><?php _e( '', ALP_SLUG ) ?></em>
     <form method="post">
         <input type="hidden" name="page" value="<?php echo ALP_Acadp_Items_List_Screen::SLUG ?>">
         <?php $alp_acadp_items_table->display() ?>
     </form>
 </div>
+
+
 
 
 

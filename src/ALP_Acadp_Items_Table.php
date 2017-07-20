@@ -146,7 +146,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_title( ALP_Acadp_Items_Table_Item $item ) {
-        return '<b>' . $item->title . '</b>';
+        return $item->title;
     }
 
     /**
@@ -166,7 +166,37 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_diff( ALP_Acadp_Items_Table_Item $item ) {
-        return (int) $item->price_orig - (int) $item->price . ' Kč';
+        return $item->get_price_diff() . ' Kč';
+    }
+
+    /**
+     * @internal Renders contents of "price_diff_final" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_diff_final( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->get_price_diff_final() . ' Kč';
+    }
+
+    /**
+     * @internal Renders contents of "price_final" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_final( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->get_price_final() . ' Kč';
+    }
+
+    /**
+     * @internal Renders contents of "price_orig" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_orig( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->price_orig . ' Kč';
     }
 
     /**
@@ -185,6 +215,16 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @return string
      * @since 1.0.0
      */
+    public function column_price_reduce_day( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->get_price_reduce_day() . ' Kč';
+    }
+
+    /**
+     * @internal Renders contents of "price_reduce_days" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
     public function column_price_reduce_days( ALP_Acadp_Items_Table_Item $item ) {
         $days = (int) $item->price_reduce_days;
 
@@ -195,16 +235,6 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
         }
 
         return '';
-    }
-
-    /**
-     * @internal Renders contents of "price_orig" column.
-     * @param ALP_Acadp_Items_Table_Item $item
-     * @return string
-     * @since 1.0.0
-     */
-    public function column_price_orig( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->price_orig . ' Kč';
     }
 
     /**
@@ -244,9 +274,12 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             'title'             => __( 'Název', ALP_SLUG ),
             'price_orig'        => __( '<abbr title="Původní cena">PC</abbr>', ALP_SLUG ),
             'price'             => __( '<abbr title="Současná cena">SC</abbr>', ALP_SLUG ),
-            'price_diff'        => __( '<abbr title="Rozdíl cen">RC</abbr>', ALP_SLUG ),
+            'price_diff'        => __( '<abbr title="Současný rozdíl cen">SRC</abbr>', ALP_SLUG ),
+            'price_final'       => __( '<abbr title="Konečná cena">KC</abbr>', ALP_SLUG ),
+            'price_diff_final'  => __( '<abbr title="Konečný rozdíl cen">KRC</abbr>', ALP_SLUG ),
             'price_reduce'      => __( '<abbr title="Snížení v %">S</abbr>', ALP_SLUG ),
             'price_reduce_days' => __( '<abbr title="Doba snižování ve dnech">DS</abbr>', ALP_SLUG ),
+            'price_reduce_day'  => __( '<abbr title="Snížení za den v Kč">SZD</abbr>', ALP_SLUG ),
         ];
         return $columns;
     }
@@ -281,9 +314,12 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             'title'             => ['title', false],
             'price_orig'        => ['price_orig', false],
             'price'             => ['price', false],
-            //'price_diff'        => ['price', false],
+            //'price_diff'        => ['price_diff', false],
+            //'price_final'       => ['price_final', false],
+            //'price_diff_final'  => ['price_diff_final', false],
             'price_reduce'      => ['price_reduce', false],
             'price_reduce_days' => ['price_reduce_days', false],
+            //'price_reduce_day'  => ['price_reduce_day', false],
         ];
         return $columns;
     }

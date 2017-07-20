@@ -5,5 +5,21 @@
  * @package odwp-acadp-lower_price
  */
 
-/* ... */
+.widefat td, .widefat th {
+    padding: 2px 5px 2px 5px !important;
+}
+
+table.inzerty .column-id { width: 50px !important; }
+table.inzerty .column-price_diff,
+table.inzerty .column-price_diff_final,
+table.inzerty .column-price_final,
+table.inzerty .column-price_reduce,
+table.inzerty .column-price_reduce_days,
+table.inzerty .column-price_reduce_day {
+    width: 80px !important;
+}
+table.inzerty .column-title,
+table.inzerty .column-price {
+    font-weight: bold;
+}
 
