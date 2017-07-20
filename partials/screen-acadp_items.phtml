@@ -21,12 +21,20 @@ $alp_acadp_items_table->prepare_items();
 
 ?>
 <div class="wrap">
-    <h1><?php _e( 'Přehled cen produktů', ALP_SLUG ) ?></h1>
+    <h1><?php _e( 'Přehled cen inzerátů', ALP_SLUG ) ?></h1>
+    <p><?php _e( '', ALP_SLUG ) ?></em>
     <form method="post">
         <input type="hidden" name="page" value="<?php echo ALP_Acadp_Items_List_Screen::SLUG ?>">
-        <?php
-            $alp_acadp_items_table->search_box( 'search', 'search_id' );
-            $alp_acadp_items_table->display();
-        ?>
+        <?php $alp_acadp_items_table->display() ?>
     </form>
 </div>
+
+
+
+
+
+
+
+
+
+

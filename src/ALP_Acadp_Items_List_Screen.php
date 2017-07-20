@@ -41,10 +41,18 @@ class ALP_Acadp_Items_List_Screen extends ALP_Screen_Prototype {
         $this->page_title = __( 'Přehled cen produktů', ALP_SLUG );
 
         // Specify help tabs
-        $this->help_tabs = [];
+        $this->help_tabs[] = [
+            'id' => self::SLUG . '-helptab',
+            'title' => __( 'Nápověda', DL_SLUG ),
+            'content' => __( '<p>Na této stránce najdete přehled cen inzerátů, které byly vytvořeny pomocí pluginu <b>Advanced Classifieds & Directory Pro</b> a obsahují potřebné meta hodnoty <em>price</em>, <em>price_orig</em>, <em>price_reduce</em> a <em>price_reduce_days</em>.</p><p>Položky jsou zvýrazněny na základě jejich stavu:</p><ul><li>modrým podbarvením jsou zvýrazněny inzeráty, které mají ještě původní cenu nebo probíhá její snižování</li><li>slabě červeně jsou zvýrazněny inzeráty, které již mají cenu sníženu na maximum</li><li>šedě podbarvené jsou ty inzeráty, které neobsahují potřebné meta hodnoty a neprobíhá u nich tudíž snižování cen</li></ul>', DL_SLUG ),
+        ];
 
         // Specify help sidebars
-        $this->help_sidebars = [];
+        $this->help_sidebars[] = sprintf(
+                __( '<b>Užitečné odkazy</b><ul><li><a href="%s" target="blank">Zdrojové kódy</a></li><li><a href="%s" target="blank">Advanced Classifieds &amp; Directory Pro</a></li></ul>', ALP_SLUG ),
+                'https://github.com/ondrejd/odwp-acadp-lower_price',
+                'https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/'
+        );
 
         // Specify screen options
         $this->enable_screen_options = false;
