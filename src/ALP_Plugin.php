@@ -31,6 +31,12 @@ class ALP_Plugin {
     const SETTINGS_KEY = ALP_SLUG . '_settings';
 
     /**
+     * @const string
+     * @since 1.0.0
+     */
+    const CRON_EVENT_KEY = ALP_SLUG . '-daily_cron';
+
+    /**
      * @var array $admin_screens Array with admin screens.
      * @since 1.0.0
      */
@@ -48,7 +54,14 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function activate() {
-        //...
+        // Register our wp-cron that lower the prices
+        $next_scheduled = self::get_option( 'execution_time' );
+        $timestamp = wp_next_scheduled( self::CRON_EVENT_KEY );
+
+        if( $timestamp == false ) {
+            $time = strtotime( $next_scheduled . ':00' );
+            wp_schedule_event( $time, 'daily', self::CRON_EVENT_KEY );
+        }
     }
 
     /**
@@ -67,6 +80,7 @@ class ALP_Plugin {
     public static function get_default_options() {
         return [
             'execution_time' => '01:00',
+            'last_execution_time' => '00:00',
         ];
     }
 
@@ -118,9 +132,9 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function initialize() {
-        register_activation_hook( __FILE__, [__CLASS__, 'activate'] );
-        register_deactivation_hook( __FILE__, [__CLASS__, 'deactivate'] );
-        register_uninstall_hook( __FILE__, [__CLASS__, 'uninstall'] );
+        register_activation_hook( ALP_FILE, [__CLASS__, 'activate'] );
+        register_deactivation_hook( ALP_FILE, [__CLASS__, 'deactivate'] );
+        register_uninstall_hook( ALP_FILE, [__CLASS__, 'uninstall'] );
 
         add_action( 'init', [__CLASS__, 'init'] );
         add_action( 'admin_init', [__CLASS__, 'admin_init'] );
@@ -128,6 +142,9 @@ class ALP_Plugin {
         add_action( 'plugins_loaded', [__CLASS__, 'plugins_loaded'] );
         add_action( 'wp_enqueue_scripts', [__CLASS__, 'enqueue_scripts'] );
         add_action( 'admin_enqueue_scripts', [__CLASS__, 'admin_enqueue_scripts'] );
+
+        //Hook our function , wi_create_backup(), into the action wi_create_daily_backup
+        add_action( self::CRON_EVENT_KEY, [__CLASS__, 'lower_price'] );
     }
 
     /**
@@ -353,8 +370,8 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function get_next_scheduled() {
-        $next = ALP_Plugin::get_option( 'execution_time' );
-        $next_txt = date( 'Y-m-d ' . $next . ':00' );
+        $next = wp_next_scheduled( ALP_Plugin::CRON_EVENT_KEY );
+        $next_txt = date( 'Y-m-d H:i:s', $timestamp );
         $next_obj = new DateTime( $next_txt );
         $is_tomorrow = false;
 
@@ -366,10 +383,27 @@ class ALP_Plugin {
         $hours_left = $next_obj->diff( new DateTime )->format( '%h' );
 
         return [
-            'next_scheduled' => $next,
+            'next_scheduled' => date( 'H:i', $next ),
             'hours_left' => $hours_left,
             'is_next_tomorrow' => $is_tomorrow,
         ];
+    }
+
+    /**
+     * This is script executed to lower prices by the WP-Cron.
+     * @see ALP_Plugin::initialize()
+     * @see ALP_Plugin::initialize()
+     * @return void
+     * @since 1.0.0
+     */
+    public static function lower_price() {
+        // 1) vzit vsechny acadp inzeraty
+        // 2) vsechny postupne projit
+        // 2a) snizit jim cenu
+        // 2b) zapsat log (?)
+
+        // Ulozit do nastaveni datum a cas posledniho spusteni
+        self::update_option( 'last_execution_time', date( 'H:i', time() ) );
     }
 }
 
