@@ -25,6 +25,10 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 
 ![Nastavení pluginu](screenshot-01.png "Nastavení pluginu")
 
+### Ceny produktů
+
+![Přehled cen produktů](screenshot-02.png "Přehled cen produktů")
+
 [1]: https://wordpress.org/
 [2]: https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/
 [3]: https://nepotrebujem.eu/

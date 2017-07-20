@@ -180,6 +180,8 @@ class ALP_Plugin {
     protected static function init_screens() {
         include( ALP_PATH . 'src/ALP_Screen_Prototype.php' );
         include( ALP_PATH . 'src/ALP_Options_Screen.php' );
+        include( ALP_PATH . 'src/ALP_Acadp_Items_List_Screen.php' );
+        //include( ALP_PATH . 'src/ALP_Price_Log_Screen.php' );
 
         /**
          * @var ALP_Options_Screen $options_screen
@@ -187,7 +189,17 @@ class ALP_Plugin {
         $options_screen = new ALP_Options_Screen();
         self::$admin_screens[$options_screen->get_slug()] = $options_screen;
 
-        // ...
+        /**
+         * @var ALP_Acadp_Items_List_Screen $acadp_items_screen;
+         */
+        $acadp_items_screen = new ALP_Acadp_Items_List_Screen();
+        self::$admin_screens[$acadp_items_screen->get_slug()] = $acadp_items_screen;
+
+        /**
+         * @var ALP_Price_Log_Screen $price_log_screen;
+         */
+        //$price_log_screen = new ALP_Price_Log_Screen();
+        //self::$admin_screens[$price_log_screen->get_slug()] = $price_log_screen;
     }
 
     /**

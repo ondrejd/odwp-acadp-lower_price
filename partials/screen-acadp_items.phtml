@@ -1,0 +1,32 @@
+<?php
+/**
+ * @author Ondřej Doněk <ondrejd@gmail.com>
+ * @link https://github.com/ondrejd/odwp-acadp-lower_price for the canonical source repository
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
+ * @package odwp-acadp-lower_price
+ * @see ALP_Plugin::admin_menu()
+ * @since 1.0.0
+ */
+
+if( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+if( ! class_exists( 'ALP_Acadp_Items_Table' ) ) {
+    require_once( DL_PATH . 'src/ALP_Acadp_Items_Table.php' );
+}
+
+$alp_acadp_items_table = new ALP_Acadp_Items_Table();
+$alp_acadp_items_table->prepare_items();
+
+?>
+<div class="wrap">
+    <h1><?php _e( 'Přehled cen produktů', ALP_SLUG ) ?></h1>
+    <form method="post">
+        <input type="hidden" name="page" value="<?php echo ALP_Acadp_Items_List_Screen::SLUG ?>">
+        <?php
+            $alp_acadp_items_table->search_box( 'search', 'search_id' );
+            $alp_acadp_items_table->display();
+        ?>
+    </form>
+</div>
