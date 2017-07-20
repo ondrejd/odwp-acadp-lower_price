@@ -1,6 +1,6 @@
 # Pravidelné snižování cen
 
-Jednoduchý plugin pro [WordPress][1], který pravidelně snižuje cenu produktů vytvořeného pomocí pluginu [Advanced Classifieds &amp; Directory Pro][2].
+Jednoduchý plugin pro [WordPress][1], který pravidelně snižuje cenu inzerátů vytvořeného pomocí pluginu [Advanced Classifieds &amp; Directory Pro][2].
 
 ## Upozornění
 
@@ -14,10 +14,10 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 
 ## Popis pluginu
 
-* plugin pravidelně snižuje cenu u produktů vytvořených pomocí pluginu <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr>, které obsahují meta hodnoty `price`, `price_orig`, `price_reduce` a `price_reduce_days`,
+* plugin pravidelně snižuje cenu u inzerátů vytvořených pomocí pluginu <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr>, které obsahují meta hodnoty `price`, `price_orig`, `price_reduce` a `price_reduce_days`,
 * plugin umožňuje nastavit, kdy bude příslušna úloha spuštěna (pro spouštění je využita funkce [`wp_cron`][5],
 * plugin obsahuje přehledný výpis o provedených změnách cen,
-* plugin obsahuje přehledný výpis <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr> produktů z hlediska jejich ceny a jejích stavu a vývoje.
+* plugin obsahuje přehledný výpis <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr> inzerátů z hlediska jejich ceny a jejích stavu a vývoje.
 
 ## Snímky obrazovek
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Pravidelné snižování cen
  * Plugin URI: https://github.com/ondrejd/odwp-acadp-lower_price
- * Description: Jednoduchý plugin pro <a href="https://wordpress.org/" target="blank">WordPress</a>, který pravidelně snižuje cenu produktů vytvořeného pomocí pluginu <a href="https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/" target="blank">Advanced Classifieds &amp; Directory Pro</a>.
+ * Description: Jednoduchý plugin pro <a href="https://wordpress.org/" target="blank">WordPress</a>, který pravidelně snižuje cenu inzerátů vytvořeného pomocí pluginu <a href="https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/" target="blank">Advanced Classifieds &amp; Directory Pro</a>.
  * Version: 1.0.0
  * Author: Ondřej Doněk
  * Author URI: https://ondrejd.com/

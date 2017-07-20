@@ -23,57 +23,55 @@ class ALP_Acadp_Items_Table_Item {
      * @var integer $id
      * @since 1.0.0
      */
-    protected $id;
+    public $id;
 
     /**
-     * @var string $text
+     * @var string $title
      * @since 1.0.0
      */
-    protected $text;
+    public $title;
+
+    /**
+     * @var integer $price
+     * @since 1.0.0
+     */
+    public $price;
+
+    /**
+     * @var integer $price_reduce
+     * @since 1.0.0
+     */
+    public $price_reduce;
+
+    /**
+     * @var integer $price_reduce_days
+     * @since 1.0.0
+     */
+    public $price_reduce_days;
+
+    /**
+     * @var integer $price_orig
+     * @since 1.0.0
+     */
+    public $price_orig;
 
     /**
      * Construct.
      * @param integer $id
-     * @param integer $text
+     * @param string  $title
+     * @param integer $price
+     * @param integer $price_reduce
+     * @param integer $price_reduce_days
+     * @param integer $price_orig
      * @since 1.0.0
      */
-    public function __construct( $id, $text ) {
-        $this->id   = $id;
-        $this->text = $text;
-    }
-
-    /**
-     * @return integer
-     * @since 1.0.0
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     * @since 1.0.0
-     */
-    public function getText() {
-        return $this->text;
-    }
-
-    /**
-     * @param integer $id
-     * @return void
-     * @since 1.0.0
-     */
-    public function setId( $id ) {
-        $this->id = $id;
-    }
-
-    /**
-     * @param string $message
-     * @return void
-     * @since 1.0.0
-     */
-    public function setText( $text ) {
-        $this->text = $text;
+    public function __construct( $id, $title, $price, $price_reduce, $price_reduce_days, $price_orig ) {
+        $this->id                = (int) $id;
+        $this->title             = $title;
+        $this->price             = (int) $price;
+        $this->price_reduce      = (int) $price_reduce;
+        $this->price_reduce_days = (int) $price_reduce_days;
+        $this->price_orig        = (int) $price_orig;
     }
 }
 

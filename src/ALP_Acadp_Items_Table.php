@@ -92,17 +92,17 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
     public static function get_options() {
         $user = get_current_user_id();
 
-        $per_page = get_user_meta( $user, DL_Log_Screen::SLUG . '-per_page', true );
+        $per_page = get_user_meta( $user, ALP_Acadp_Items_List_Screen::SLUG . '-per_page', true );
         if( strlen( $per_page ) == 0 ) {
             $per_page = self::DEFAULT_PER_PAGE;
         }
 
-        $sort_col = get_user_meta( $user, DL_Log_Screen::SLUG . '-sort_col', true );
+        $sort_col = get_user_meta( $user, ALP_Acadp_Items_List_Screen::SLUG . '-sort_col', true );
         if( strlen( $sort_col ) == 0 ) {
             $sort_col = self::DEFAULT_SORT_COL;
         }
 
-        $sort_dir = get_user_meta( $user, DL_Log_Screen::SLUG . '-sort_dir', true );
+        $sort_dir = get_user_meta( $user, ALP_Acadp_Items_List_Screen::SLUG . '-sort_dir', true );
         if( strlen( $sort_dir ) == 0 ) {
             $sort_dir = self::DEFAULT_SORT_DIR;
         }
@@ -125,28 +125,86 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="acadp_item[]" value="%s">', $item->getId()
+            '<input type="checkbox" name="acadp_item[]" value="%s">', $item->id
         );
     }
 
     /**
-     * Default function for rendering columns.
+     * @internal Renders contents of "id" column.
      * @param ALP_Acadp_Items_Table_Item $item
-     * @param string $column_name
      * @return string
      * @since 1.0.0
      */
-    public function column_default( $item, $column_name ) {
-        switch( $column_name ) { 
-            case 'id':
-                return $item->getId();
+    public function column_id( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->id;
+    }
 
-            case 'text':
-                return $item->getMessage();
+    /**
+     * @internal Renders contents of "title" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_title( ALP_Acadp_Items_Table_Item $item ) {
+        return '<b>' . $item->title . '</b>';
+    }
 
-            default:
-                return '';
+    /**
+     * @internal Renders contents of "price" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->price . ' Kč';
+    }
+
+    /**
+     * @internal Renders contents of "price_diff" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_diff( ALP_Acadp_Items_Table_Item $item ) {
+        return (int) $item->price_orig - (int) $item->price . ' Kč';
+    }
+
+    /**
+     * @internal Renders contents of "price_reduce" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_reduce( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->price_reduce . ' %';
+    }
+
+    /**
+     * @internal Renders contents of "price_reduce_days" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_reduce_days( ALP_Acadp_Items_Table_Item $item ) {
+        $days = (int) $item->price_reduce_days;
+
+        if( $days >= 1 && $days <= 4 ) {
+            return $days . ' dny';
+        } else {
+            return $days . ' dnů';
         }
+
+        return '';
+    }
+
+    /**
+     * @internal Renders contents of "price_orig" column.
+     * @param ALP_Acadp_Items_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_orig( ALP_Acadp_Items_Table_Item $item ) {
+        return $item->price_orig . ' Kč';
     }
 
     /**
@@ -181,9 +239,14 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     public function get_columns() {
         $columns = [
-            'cb'   => '<input type="checkbox">',
-            'id'   => __( '<abbr title="Pořadové číslo">P.č.</abbr>', DL_LOG ),
-            'text' => __( 'Záznam', DL_LOG ),
+            'cb'                => '<input type="checkbox">',
+            'id'                => __( 'ID', ALP_SLUG ),
+            'title'             => __( 'Název', ALP_SLUG ),
+            'price_orig'        => __( '<abbr title="Původní cena">PC</abbr>', ALP_SLUG ),
+            'price'             => __( '<abbr title="Současná cena">SC</abbr>', ALP_SLUG ),
+            'price_diff'        => __( '<abbr title="Rozdíl cen">RC</abbr>', ALP_SLUG ),
+            'price_reduce'      => __( '<abbr title="Snížení v %">S</abbr>', ALP_SLUG ),
+            'price_reduce_days' => __( '<abbr title="Doba snižování ve dnech">DS</abbr>', ALP_SLUG ),
         ];
         return $columns;
     }
@@ -214,8 +277,13 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     public function get_sortable_columns() {
         $columns = [
-            'id'   => ['id', false],
-            'text' => ['text', false],
+            'id'                => ['id', false],
+            'title'             => ['title', false],
+            'price_orig'        => ['price_orig', false],
+            'price'             => ['price', false],
+            //'price_diff'        => ['price', false],
+            'price_reduce'      => ['price_reduce', false],
+            'price_reduce_days' => ['price_reduce_days', false],
         ];
         return $columns;
     }
@@ -251,7 +319,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
         $per_page = $options['per_page'];
 
         // Apply sorting
-        usort( $data, [$this, 'usort_reorder'] );
+        usort( $data_all, [$this, 'usort_reorder'] );
 
         // Pagination arguments
         $this->set_pagination_args( [
@@ -271,8 +339,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     private function get_order_args() {
         $options  = self::get_options();
-        $orderby = filter_input( INPUT_POST, DL_Log_Screen::SLUG . '-sort_col' );
-        $order = filter_input( INPUT_POST, DL_Log_Screen::SLUG . '-sort_dir' );
+        $orderby = filter_input( INPUT_POST, ALP_Acadp_Items_List_Screen::SLUG . '-sort_col' );
+        $order = filter_input( INPUT_POST, ALP_Acadp_Items_List_Screen::SLUG . '-sort_dir' );
 
         if( empty( $orderby ) ) {
             $orderby = filter_input( INPUT_GET, 'orderby' );
@@ -308,37 +376,26 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function get_data() {
-        return [];
-    }
+        $data = [];
+        $query = new WP_Query( [
+            'nopaging'  => false,
+            'post_type' => 'acadp_listings', 
+        ] );
 
-    /**
-     * @internal Returns "Order by" parameter for sorting.
-     * @return string
-     * @since 1.0.0
-     */
-    public function get_sort_order() {
-        $order = filter_input( INPUT_GET, 'order' );
-
-        if( empty( $order ) ) {
-            $order = self::get_options()['sort_dir'];
+        if( $query->have_posts() ) {
+            foreach( $query->get_posts() as $post ) {
+                $data[] = new ALP_Acadp_Items_Table_Item(
+                        $post->ID,
+                        $post->post_title,
+                        get_post_meta( $post->ID, 'price', true ),
+                        get_post_meta( $post->ID, 'price_reduce', true ),
+                        get_post_meta( $post->ID, 'price_reduce_days', true ),
+                        get_post_meta( $post->ID, 'price_orig', true )
+                );
+            }
         }
 
-        return $order;
-    }
-
-    /**
-     * @internal Returns "Order by" parameter for sorting.
-     * @return string
-     * @since 1.0.0
-     */
-    public function get_sort_orderby() {
-        $orderby = filter_input( INPUT_GET, 'orderby' );
-
-        if( empty( $orderby ) ) {
-            $orderby = self::get_options()['sort_col'];
-        }
-
-        return $orderby;
+        return $data;
     }
 
     /**
@@ -349,20 +406,39 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     protected function usort_reorder( ALP_Acadp_Items_Table_Item $a, ALP_Acadp_Items_Table_Item $b ) {
-        $order = $this->get_sort_order();
-        $orderby = $this->get_sort_orderby();
+        extract( $this->get_order_args() );
         $val1 = null;
         $val2 = null;
 
         switch( $orderby ) {
             case 'id':
-                $val1 = $a->getId();
-                $val2 = $b->getId();
+                $val1 = $a->id;
+                $val2 = $b->id;
                 break;
 
-            case 'text':
-                $val1 = $a->getText();
-                $val2 = $b->getText();
+            case 'title':
+                $val1 = $a->title;
+                $val2 = $b->title;
+                break;
+
+            case 'price':
+                $val1 = $a->price;
+                $val2 = $b->price;
+                break;
+
+            case 'price_reduce':
+                $val1 = $a->price_reduce;
+                $val2 = $b->price_reduce;
+                break;
+
+            case 'price_reduce':
+                $val1 = $a->price_reduce_days;
+                $val2 = $b->price_reduce_days;
+                break;
+
+            case 'price_orig':
+                $val1 = $a->price_orig;
+                $val2 = $b->price_orig;
                 break;
         }
 
