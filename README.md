@@ -19,6 +19,12 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 * plugin obsahuje přehledný výpis o provedených změnách cen,
 * plugin obsahuje přehledný výpis <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr> produktů z hlediska jejich ceny a jejích stavu a vývoje.
 
+## Snímky obrazovek
+
+### Nastavení pluginu
+
+![Nastavení pluginu](screenshot-01.png "Nastavení pluginu")
+
 [1]: https://wordpress.org/
 [2]: https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/
 [3]: https://nepotrebujem.eu/
