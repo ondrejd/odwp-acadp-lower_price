@@ -15,7 +15,7 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 ## Popis pluginu
 
 * plugin pravidelně snižuje cenu u produktů vytvořených pomocí pluginu <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr>, která obsahují meta hodnoty `price`, `price_orig`, `price_reduce` a `price_reduce_days`,
-* plugin umožňuje nastavit, kdy bude příslušna _WP\_Cron_ úloha spuštěna,
+* plugin umožňuje nastavit, kdy bude příslušna úloha spuštěna (pro spouštění je využita funkce `[wp_cron][5]`,
 * plugin obsahuje přehledný výpis o provedených změnách cen,
 * plugin obsahuje přehledný výpis <abbr title="Advanced Classifieds & Directory Pro">_ACADP_</abbr> produktů z hlediska jejich ceny a jejích stavu a vývoje.
 
@@ -23,4 +23,5 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 [2]: https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/
 [3]: https://nepotrebujem.eu/
 [4]: mailto:ondrejd@gmail.com
+[5]: https://developer.wordpress.org/reference/functions/wp_cron/
 
