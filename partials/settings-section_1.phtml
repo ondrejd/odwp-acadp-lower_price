@@ -14,5 +14,5 @@ if( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <p class="description">
-    <?php _e( 'Pro ukládání chybových a ladících informací do souboru <code>debug.log</code> musí být vaše instalace <a href="https://wordpress.org/" target="blank">WordPress</a> nastavena - jedná se o jednoduchou úpravu souboru <code>wp-config.php</code>, kterou může tento plugin provést za vás, když povolíte ladící mód níže.', ALP_SLUG ) ?>
+    <?php printf( __( 'Nastavte čas pro spouštění skriptu pro pravidelné snižování cen. V nastavený čas bude každý den skript spuštěn pomocí <a href="%s" target="blank">wp_cron</a>.', ALP_SLUG ), 'https://developer.wordpress.org/reference/functions/wp_cron/' ) ?>
 </p>

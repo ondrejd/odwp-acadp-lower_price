@@ -27,7 +27,7 @@ class ALP_Options_Screen extends ALP_Screen_Prototype {
     public function __construct( \WP_Screen $screen = null ) {
         // Main properties
         $this->slug = ALP_SLUG . '-plugin_options';
-        $this->menu_title = __( 'Pravidelné snižování cen', ALP_SLUG );
+        $this->menu_title = __( 'Snižování cen', ALP_SLUG );
         $this->page_title = __( 'Nastavení pro plugin <em>Pravidelné snižování cen</em>', ALP_SLUG );
 
         // Specify help tabs

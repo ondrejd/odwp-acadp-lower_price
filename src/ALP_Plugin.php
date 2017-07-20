@@ -165,7 +165,7 @@ class ALP_Plugin {
 
         add_settings_field(
                 'execution_time',
-                __( 'Čas spouštění <em>WP_Cron</em> skriptu', ALP_SLUG ),
+                __( 'Čas spouštění', ALP_SLUG ),
                 [__CLASS__, 'render_setting_execution_time'],
                 ALP_SLUG,
                 $section1
@@ -268,7 +268,6 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function render_setting_execution_time() {
-        $debug_mode = self::get_option( 'execution_time' );
         ob_start( function() {} );
         include( ALP_PATH . '/partials/setting-execution_time.phtml' );
         echo ob_get_flush();

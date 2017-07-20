@@ -4,19 +4,70 @@
  * @link https://github.com/ondrejd/odwp-acadp-lower_price for the canonical source repository
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
  * @package odwp-acadp-lower_price
- * @see ALP_Plugin::render_setting_debug_mode()
+ * @see ALP_Plugin::render_setting_execution_time()
  * @since 1.0.0
  *
  * Variables passed:
- * @var string $debug_mode ['enable','disable']
+ * @var string $execution_time ['enable','disable']
  */
 
 if( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @var string $execution_time
+ */
+$execution_time = ALP_Plugin::get_option( 'execution_time' );
+
 ?>
-<select id="<?php echo ALP_SLUG ?>_settings_debug_mode" name="<?php echo ALP_SLUG ?>_settings[debug_mode]" value="<?php echo $debug_mode ?>">
-    <option value="enabled"<?php selected( $debug_mode, 'enabled' ) ?>><?php _e( 'Povolit', ALP_SLUG ) ?></option>
-    <option value="disabled"<?php selected( $debug_mode, 'disabled' ) ?>><?php _e( 'Zakázat', ALP_SLUG ) ?></option>
+<select id="<?php echo ALP_SLUG ?>_settings_execution_time" name="<?php echo ALP_SLUG ?>_settings[execution_time]" value="<?php echo $execution_time ?>">
+    <option value="00:00"<?php selected( $execution_time, '00:00' ) ?>><?php _e( '00:00', ALP_SLUG ) ?></option>
+    <option value="00:30"<?php selected( $execution_time, '00:30' ) ?>><?php _e( '00:30', ALP_SLUG ) ?></option>
+    <option value="01:00"<?php selected( $execution_time, '01:00' ) ?>><?php _e( '01:00', ALP_SLUG ) ?></option>
+    <option value="01:30"<?php selected( $execution_time, '01:30' ) ?>><?php _e( '01:30', ALP_SLUG ) ?></option>
+    <option value="02:00"<?php selected( $execution_time, '02:00' ) ?>><?php _e( '02:00', ALP_SLUG ) ?></option>
+    <option value="02:30"<?php selected( $execution_time, '02:30' ) ?>><?php _e( '02:30', ALP_SLUG ) ?></option>
+    <option value="03:00"<?php selected( $execution_time, '03:00' ) ?>><?php _e( '03:00', ALP_SLUG ) ?></option>
+    <option value="03:30"<?php selected( $execution_time, '03:30' ) ?>><?php _e( '03:30', ALP_SLUG ) ?></option>
+    <option value="04:00"<?php selected( $execution_time, '04:00' ) ?>><?php _e( '04:00', ALP_SLUG ) ?></option>
+    <option value="04:30"<?php selected( $execution_time, '04:30' ) ?>><?php _e( '04:30', ALP_SLUG ) ?></option>
+    <option value="05:00"<?php selected( $execution_time, '05:00' ) ?>><?php _e( '05:00', ALP_SLUG ) ?></option>
+    <option value="05:30"<?php selected( $execution_time, '05:30' ) ?>><?php _e( '05:30', ALP_SLUG ) ?></option>
+    <option value="06:00"<?php selected( $execution_time, '06:00' ) ?>><?php _e( '06:00', ALP_SLUG ) ?></option>
+    <option value="06:30"<?php selected( $execution_time, '06:30' ) ?>><?php _e( '06:30', ALP_SLUG ) ?></option>
+    <option value="07:00"<?php selected( $execution_time, '07:00' ) ?>><?php _e( '07:00', ALP_SLUG ) ?></option>
+    <option value="07:30"<?php selected( $execution_time, '07:30' ) ?>><?php _e( '07:30', ALP_SLUG ) ?></option>
+    <option value="08:00"<?php selected( $execution_time, '08:00' ) ?>><?php _e( '08:00', ALP_SLUG ) ?></option>
+    <option value="08:30"<?php selected( $execution_time, '08:30' ) ?>><?php _e( '08:30', ALP_SLUG ) ?></option>
+    <option value="09:00"<?php selected( $execution_time, '09:00' ) ?>><?php _e( '09:00', ALP_SLUG ) ?></option>
+    <option value="09:30"<?php selected( $execution_time, '09:30' ) ?>><?php _e( '09:30', ALP_SLUG ) ?></option>
+    <option value="10:00"<?php selected( $execution_time, '10:00' ) ?>><?php _e( '10:00', ALP_SLUG ) ?></option>
+    <option value="10:30"<?php selected( $execution_time, '10:30' ) ?>><?php _e( '10:30', ALP_SLUG ) ?></option>
+    <option value="11:00"<?php selected( $execution_time, '11:00' ) ?>><?php _e( '11:00', ALP_SLUG ) ?></option>
+    <option value="11:30"<?php selected( $execution_time, '11:30' ) ?>><?php _e( '11:30', ALP_SLUG ) ?></option>
+    <option value="12:00"<?php selected( $execution_time, '12:00' ) ?>><?php _e( '12:00', ALP_SLUG ) ?></option>
+    <option value="12:30"<?php selected( $execution_time, '12:30' ) ?>><?php _e( '12:30', ALP_SLUG ) ?></option>
+    <option value="13:00"<?php selected( $execution_time, '13:00' ) ?>><?php _e( '13:00', ALP_SLUG ) ?></option>
+    <option value="13:30"<?php selected( $execution_time, '13:30' ) ?>><?php _e( '13:30', ALP_SLUG ) ?></option>
+    <option value="14:00"<?php selected( $execution_time, '14:00' ) ?>><?php _e( '14:00', ALP_SLUG ) ?></option>
+    <option value="14:30"<?php selected( $execution_time, '14:30' ) ?>><?php _e( '14:30', ALP_SLUG ) ?></option>
+    <option value="15:00"<?php selected( $execution_time, '15:00' ) ?>><?php _e( '15:00', ALP_SLUG ) ?></option>
+    <option value="15:30"<?php selected( $execution_time, '15:30' ) ?>><?php _e( '15:30', ALP_SLUG ) ?></option>
+    <option value="16:00"<?php selected( $execution_time, '16:00' ) ?>><?php _e( '16:00', ALP_SLUG ) ?></option>
+    <option value="16:30"<?php selected( $execution_time, '16:30' ) ?>><?php _e( '16:30', ALP_SLUG ) ?></option>
+    <option value="17:00"<?php selected( $execution_time, '17:00' ) ?>><?php _e( '17:00', ALP_SLUG ) ?></option>
+    <option value="17:30"<?php selected( $execution_time, '17:30' ) ?>><?php _e( '17:30', ALP_SLUG ) ?></option>
+    <option value="18:00"<?php selected( $execution_time, '18:00' ) ?>><?php _e( '18:00', ALP_SLUG ) ?></option>
+    <option value="18:30"<?php selected( $execution_time, '18:30' ) ?>><?php _e( '18:30', ALP_SLUG ) ?></option>
+    <option value="19:00"<?php selected( $execution_time, '19:00' ) ?>><?php _e( '19:00', ALP_SLUG ) ?></option>
+    <option value="19:30"<?php selected( $execution_time, '19:30' ) ?>><?php _e( '19:30', ALP_SLUG ) ?></option>
+    <option value="20:00"<?php selected( $execution_time, '20:00' ) ?>><?php _e( '20:00', ALP_SLUG ) ?></option>
+    <option value="20:30"<?php selected( $execution_time, '20:30' ) ?>><?php _e( '20:30', ALP_SLUG ) ?></option>
+    <option value="21:00"<?php selected( $execution_time, '21:00' ) ?>><?php _e( '21:00', ALP_SLUG ) ?></option>
+    <option value="21:30"<?php selected( $execution_time, '21:30' ) ?>><?php _e( '21:30', ALP_SLUG ) ?></option>
+    <option value="22:00"<?php selected( $execution_time, '22:00' ) ?>><?php _e( '22:00', ALP_SLUG ) ?></option>
+    <option value="22:30"<?php selected( $execution_time, '22:30' ) ?>><?php _e( '22:30', ALP_SLUG ) ?></option>
+    <option value="23:00"<?php selected( $execution_time, '23:00' ) ?>><?php _e( '23:00', ALP_SLUG ) ?></option>
+    <option value="23:30"<?php selected( $execution_time, '23:30' ) ?>><?php _e( '23:30', ALP_SLUG ) ?></option>
 </select>
