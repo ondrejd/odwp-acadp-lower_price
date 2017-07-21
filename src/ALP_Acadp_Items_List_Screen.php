@@ -37,8 +37,8 @@ class ALP_Acadp_Items_List_Screen extends ALP_Screen_Prototype {
     public function __construct( \WP_Screen $screen = null ) {
         // Main properties
         $this->slug = self::SLUG;
-        $this->menu_title = __( 'Ceny produktů', ALP_SLUG );
-        $this->page_title = __( 'Přehled cen produktů', ALP_SLUG );
+        $this->menu_title = __( 'Ceny inzerátů', ALP_SLUG );
+        $this->page_title = __( 'Přehled cen inzerátů', ALP_SLUG );
 
         // Specify help tabs
         $this->help_tabs[] = [
