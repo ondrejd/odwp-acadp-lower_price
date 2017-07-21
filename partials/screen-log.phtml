@@ -1,0 +1,32 @@
+<?php
+/**
+ * @author Ondřej Doněk <ondrejd@gmail.com>
+ * @link https://github.com/ondrejd/odwp-acadp-lower_price for the canonical source repository
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
+ * @package odwp-acadp-lower_price
+ * @since 1.0.0
+ */
+
+if( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+if( ! class_exists( 'ALP_Log_Table' ) ) {
+    require_once( DL_PATH . 'src/ALP_Log_Table.php' );
+}
+
+/**
+ * @var ALP_Log_Table $alp_log_table
+ */
+$alp_log_table = new ALP_Log_Table();
+$alp_log_table->prepare_items();
+
+?>
+<div class="wrap">
+    <h1><?php _e( 'Log změn cen', ALP_SLUG ) ?></h1>
+    <form method="post">
+        <input type="hidden" name="page" value="<?php echo ALP_Log_Screen::SLUG ?>">
+        <?php $alp_log_table->display() ?>
+        <input type="submit" name="erase_log" value="<?php _e( 'Smazat log', ALP_SLUG ) ?>" class="button button-primary">
+    </form>
+</div>

@@ -87,7 +87,7 @@ Přehled počátečních úkolů k dokončení __verze 1.0.0__.
 * ~~Samotná funkcionalita pro snižování cen (přes [_WP\_Cron_][5])~~
   - ~~provést snížení cen~~
   - ~~uvést čas tohoto posledního spuštění~~
-  - __uložit log o změnách__
+  - __uložit log o změnách (v závislosti na uživatelském nastavení)__
 * __Stránka s výpisem provedených změn cen__
   - vytvořit tabulku `odwpalp-log` a zároveň i odpovídající třídu `ALP_Log_DbTable`.
 

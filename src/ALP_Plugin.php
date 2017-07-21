@@ -74,6 +74,7 @@ class ALP_Plugin {
         return [
             'execution_time' => '01:00',
             'last_execution_time' => '1970-01-01 00:00:00',
+            'save_log' => true,
         ];
     }
 
@@ -103,19 +104,6 @@ class ALP_Plugin {
     }
 
     /**
-     * @param string $key
-     * @param mixed $value
-     * @return void
-     * @since 1.0.0
-     */
-    public static function update_option( $key, $value ) {
-        $options = self::get_options();
-        $options[$key] = $value;
-
-        update_option( self::SETTINGS_KEY, $options );
-    }
-
-    /**
      * Returns value of option with given key.
      * @param string $key Option's key.
      * @return mixed Option's value.
@@ -130,6 +118,20 @@ class ALP_Plugin {
         }
 
         return $options[$key];
+    }
+
+    /**
+     * Updates option.
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     * @since 1.0.0
+     */
+    public static function update_option( $key, $value ) {
+        $options = self::get_options();
+        $options[$key] = $value;
+
+        update_option( self::SETTINGS_KEY, $options );
     }
 
     /**
@@ -181,7 +183,7 @@ class ALP_Plugin {
         $section1 = self::SETTINGS_KEY . '_section_1';
         add_settings_section(
                 $section1,
-                __( 'Nastavení času spouštění' ),
+                __( 'Nastavení <em>CRON</em> skriptu' ),
                 [__CLASS__, 'render_settings_section_1'],
                 ALP_SLUG
         );
@@ -190,6 +192,14 @@ class ALP_Plugin {
                 'execution_time',
                 __( 'Čas spouštění', ALP_SLUG ),
                 [__CLASS__, 'render_setting_execution_time'],
+                ALP_SLUG,
+                $section1
+        );
+
+        add_settings_field(
+                'save_log',
+                __( 'Uložit log', ALP_SLUG ),
+                [__CLASS__, 'render_setting_save_log'],
                 ALP_SLUG,
                 $section1
         );
@@ -203,8 +213,8 @@ class ALP_Plugin {
     protected static function init_screens() {
         include( ALP_PATH . 'src/ALP_Screen_Prototype.php' );
         include( ALP_PATH . 'src/ALP_Options_Screen.php' );
-        include( ALP_PATH . 'src/ALP_Acadp_Items_List_Screen.php' );
-        //include( ALP_PATH . 'src/ALP_Price_Log_Screen.php' );
+        include( ALP_PATH . 'src/ALP_Listings_Screen.php' );
+        include( ALP_PATH . 'src/ALP_Log_Screen.php' );
 
         /**
          * @var ALP_Options_Screen $options_screen
@@ -213,16 +223,16 @@ class ALP_Plugin {
         self::$admin_screens[$options_screen->get_slug()] = $options_screen;
 
         /**
-         * @var ALP_Acadp_Items_List_Screen $acadp_items_screen;
+         * @var ALP_Listings_Screen $listings_screen;
          */
-        $acadp_items_screen = new ALP_Acadp_Items_List_Screen();
-        self::$admin_screens[$acadp_items_screen->get_slug()] = $acadp_items_screen;
+        $listings_screen = new ALP_Listings_Screen();
+        self::$admin_screens[$listings_screen->get_slug()] = $listings_screen;
 
         /**
-         * @var ALP_Price_Log_Screen $price_log_screen;
+         * @var ALP_Log_Screen $log_screen;
          */
-        //$price_log_screen = new ALP_Price_Log_Screen();
-        //self::$admin_screens[$price_log_screen->get_slug()] = $price_log_screen;
+        $log_screen = new ALP_Log_Screen();
+        self::$admin_screens[$log_screen->get_slug()] = $log_screen;
     }
 
     /**
@@ -305,6 +315,17 @@ class ALP_Plugin {
     public static function render_setting_execution_time() {
         ob_start( function() {} );
         include( ALP_PATH . '/partials/setting-execution_time.phtml' );
+        echo ob_get_flush();
+    }
+
+    /**
+     * @internal Renders setting `save_log`.
+     * @return void
+     * @since 1.0.0
+     */
+    public static function render_setting_save_log() {
+        ob_start( function() {} );
+        include( ALP_PATH . '/partials/setting-save_log.phtml' );
         echo ob_get_flush();
     }
 

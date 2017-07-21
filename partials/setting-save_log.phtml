@@ -1,0 +1,24 @@
+<?php
+/**
+ * @author Ondřej Doněk <ondrejd@gmail.com>
+ * @link https://github.com/ondrejd/odwp-acadp-lower_price for the canonical source repository
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
+ * @package odwp-acadp-lower_price
+ * @see ALP_Plugin::render_setting_save_time()
+ * @since 1.0.0
+ *
+ * Variables passed:
+ * @var string $save_log ['enable','disable']
+ */
+
+if( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+/**
+ * @var boolean $save_log
+ */
+$save_log = (bool) ALP_Plugin::get_option( 'save_log' );
+
+?>
+<input id="<?php echo ALP_SLUG ?>_settings_save_log" name="<?php echo ALP_SLUG ?>_settings[save_log]" type="checkbox"<?php checked( $save_log ) ?>">
