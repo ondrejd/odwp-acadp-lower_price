@@ -28,20 +28,20 @@ $alp_acadp_items_table->prepare_items();
 $next = ALP_Plugin::get_next_scheduled();
 
 // Print message about next scheduled running of lower price script.
-$msg1 = __( 'Příští naplánované snížení cen proběhne dnes <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
+$msg1 = __( 'Příští naplánované snížení cen proběhne dnes <b>%s</b> (za <b>%s</b>).', ALP_SLUG );
 $hours = ( $next['hours_left'] == 1 ) ? '1 hodinu' : ( ( $next['hours_left'] > 4 ) ? $next['hours_left'] . ' hodin' : $next['hours_left'] . ' hodiny' );
 
 if( $next['is_next_tomorrow'] ) {
-    $msg1 = __( 'Příští naplánované snížení cen proběhne zítra <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
+    $msg1 = __( 'Příští naplánované snížení cen proběhne zítra <b>%s</b> (za <b>%s</b>).', ALP_SLUG );
 }
 
-ALP_Plugin::print_admin_notice( sprintf( $msg1, $next['next_scheduled_full'], $next['hours_left'] ), 'info', true );
+ALP_Plugin::print_admin_notice( sprintf( $msg1, $next['next_scheduled_full'], $hours ), 'warning', true );
 
 // Print message about last executed lower price script.
 $last_scheduled = ALP_Plugin::get_option( 'last_execution_time' );
-if( ! empty( $last_scheduled ) && $last_scheduled != '00:00' ) {// Byl uz skript vubec spusten?
-    $msg2 = __( 'Skript pro snížení cen byl naposledy spuštěn: <b>%s</b>', ALP_SLUG );
-    ALP_Plugin::print_admin_notice( sprintf( $msg2, $last_scheduled ), 'info', true );
+if( ! empty( $last_scheduled ) ) {// Byl uz skript vubec spusten?
+    $msg2 = __( 'Skript pro snížení cen byl naposledy spuštěn: <b>%s</b>.', ALP_SLUG );
+    ALP_Plugin::print_admin_notice( sprintf( $msg2, date( 'j.n.Y \v H:i', strtotime( $last_scheduled ) ) ), 'info', true );
 } else {
     $msg2 = __( 'Skript pro snížení cen ještě nebyl nikdy spuštěn!', ALP_SLUG );
     ALP_Plugin::print_admin_notice( $msg2, 'error', true );
@@ -53,6 +53,7 @@ if( ! empty( $last_scheduled ) && $last_scheduled != '00:00' ) {// Byl uz skript
     <form method="post">
         <input type="hidden" name="page" value="<?php echo ALP_Acadp_Items_List_Screen::SLUG ?>">
         <?php $alp_acadp_items_table->display() ?>
+        <input type="submit" name="do_lower_prices" value="Sniž ceny ručně" class="button button-primary">
     </form>
 </div>
 

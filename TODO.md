@@ -4,10 +4,10 @@
 * ~~Stránka s nastavením pluginu:~~
   - ~~kdy se má spouštět skript na změnu cen~~
 * ~~Stránka s přehledem všech _acadp_ inzerátů a stavu a vývoje jejich cen~~
-  - __přidat podbarvení dle stavu vývoje ceny inzerátu__ (viz. nápověda na stránce)
-* __Samotná funkcionalita pro snižování cen (přes _WP\_Cron_)__
-  - provést snížení cen
-  - uvést čas tohoto posledního spuštění
+  - ~~přidat podbarvení dle stavu vývoje ceny inzerátu~~
+* ~~Samotná funkcionalita pro snižování cen (přes _WP\_Cron_)~~
+  - ~~provést snížení cen~~
+  - ~~uvést čas tohoto posledního spuštění~~
   - `[?]` _uložit log o změnách_
 * `[?]` _Stránka s výpisem provedených změn cen_
 

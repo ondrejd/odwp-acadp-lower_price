@@ -44,7 +44,7 @@ class ALP_Acadp_Items_List_Screen extends ALP_Screen_Prototype {
         $this->help_tabs[] = [
             'id' => self::SLUG . '-helptab',
             'title' => __( 'Nápověda', DL_SLUG ),
-            'content' => __( '<p>Na této stránce najdete přehled cen inzerátů, které byly vytvořeny pomocí pluginu <b>Advanced Classifieds & Directory Pro</b> a obsahují potřebné meta hodnoty <em>price</em>, <em>price_orig</em>, <em>price_reduce</em> a <em>price_reduce_days</em>.</p><p>Položky jsou zvýrazněny na základě jejich stavu:</p><ul><li>modrým podbarvením jsou zvýrazněny inzeráty, které mají ještě původní cenu nebo probíhá její snižování</li><li>slabě červeně jsou zvýrazněny inzeráty, které již mají cenu sníženu na maximum</li><li>šedě podbarvené jsou ty inzeráty, které neobsahují potřebné meta hodnoty a neprobíhá u nich tudíž snižování cen</li></ul>', DL_SLUG ),
+            'content' => __( '<p>Na této stránce najdete přehled cen inzerátů, které byly vytvořeny pomocí pluginu <b>Advanced Classifieds & Directory Pro</b> a obsahují potřebné meta hodnoty <em>price</em>, <em>price_orig</em>, <em>price_reduce</em> a <em>price_reduce_days</em>.</p><p>Aktuální ceny jsou barevně zvýrazněny na základě jejich stavu:</p><ul><li><b style="color: blue;">modře</b> jsou zbarveny ceny inzerátů, které se ještě nezačali snižovat</li><li><b style="color: #f30;">červeným zbarvením</b> jsou zvýrazněny ceny inzerátů, která se již snižují, ale ještě nedosáhly minima</li><li><b style="color: green;">zeleně</b> jsou zvýrazněny ceny inzerátů, kde je již cena snížena na minimum</li></ul>', DL_SLUG ),
         ];
 
         // Specify help sidebars
@@ -60,6 +60,12 @@ class ALP_Acadp_Items_List_Screen extends ALP_Screen_Prototype {
 
         // Finish screen constuction
         parent::__construct( $screen );
+
+        // Check if user didn't press "Lower prices" button
+        $lower_prices_btn = filter_input( INPUT_POST, 'do_lower_prices' );
+        if( ! empty( $lower_prices_btn ) ) {
+            ALP_Plugin::lower_prices();
+        }
     }
 
     /**

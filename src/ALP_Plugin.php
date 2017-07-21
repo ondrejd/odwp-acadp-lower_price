@@ -73,7 +73,7 @@ class ALP_Plugin {
     public static function get_default_options() {
         return [
             'execution_time' => '01:00',
-            'last_execution_time' => '00:00',
+            'last_execution_time' => '1970-01-01 00:00:00',
         ];
     }
 
@@ -100,6 +100,19 @@ class ALP_Plugin {
         }
 
         return $options;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     * @since 1.0.0
+     */
+    public static function update_option( $key, $value ) {
+        $options = self::get_options();
+        $options[$key] = $value;
+
+        update_option( self::SETTINGS_KEY, $options );
     }
 
     /**
@@ -137,7 +150,7 @@ class ALP_Plugin {
         add_action( 'admin_enqueue_scripts', [__CLASS__, 'admin_enqueue_scripts'] );
 
         //Hook our function , wi_create_backup(), into the action wi_create_daily_backup
-        add_action( self::CRON_EVENT_KEY, [__CLASS__, 'lower_price'] );
+        add_action( self::CRON_EVENT_KEY, [__CLASS__, 'lower_prices'] );
     }
 
     /**
@@ -395,7 +408,7 @@ class ALP_Plugin {
     }
 
     /**
-     * @internal Resets next scheduled execution of {@see ALP_Plugin::lower_price()}.
+     * @internal Resets next scheduled execution of {@see ALP_Plugin::lower_prices()}.
      * @param boolean $start_again (Optional.) Defaultly TRUE.
      * @return void
      * @since 1.0.0
@@ -424,14 +437,69 @@ class ALP_Plugin {
      * @return void
      * @since 1.0.0
      */
-    public static function lower_price() {
-        // 1) vzit vsechny acadp inzeraty
-        // 2) vsechny postupne projit
-        // 2a) snizit jim cenu
-        // 2b) zapsat log (?)
+    public static function lower_prices() {
+        // Get all acadp listings
+        $data = [];
+        $query = new WP_Query( [
+            'nopaging'    => true,
+            'post_type'   => 'acadp_listings', 
+            'post_status' => 'publish',
+            'meta_query'  => [
+                [
+                    'key'     => 'price',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key'     => 'price_orig',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key'     => 'price_reduce',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key'     => 'price_reduce_days',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+            ],
+        ] );
 
-        // Ulozit do nastaveni datum a cas posledniho spusteni
-        self::update_option( 'last_execution_time', date( 'H:i', time() ) );
+        // There are now posts so no work to do
+        if( ! $query->have_posts() ) {
+            return $data;
+        }
+
+        // Go through all of them
+        foreach( $query->get_posts() as $post ) {
+            // Prepare helper object from the post (listing)
+            $item = new ALP_Acadp_Items_Table_Item(
+                $post->ID,
+                $post->post_title,
+                get_post_meta( $post->ID, 'price', true ),
+                get_post_meta( $post->ID, 'price_reduce', true ),
+                get_post_meta( $post->ID, 'price_reduce_days', true ),
+                get_post_meta( $post->ID, 'price_orig', true )
+            );
+
+            $price_final = $item->get_price_final();
+
+            // Check if is needed to lower price
+            if( $item->price > $price_final ) {
+                // If yes do it
+                $per_day_reduce = $item->get_per_day_reduce();
+                $_price_new = ceil( ( $item->price - $per_day_reduce ) );
+                $price_new = ( $_price_new < $price_final ) ? $price_final : $_price_new;
+
+                update_post_meta( $post->ID, 'price', $price_new );
+            }
+        }
+
+        // Save date and time of last execution
+        self::update_option( 'last_execution_time', date( 'Y-m-d H:i:s', time() ) );
     }
 }
 

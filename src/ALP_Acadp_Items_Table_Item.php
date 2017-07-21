@@ -102,7 +102,7 @@ class ALP_Acadp_Items_Table_Item {
      * @return integer Amount of day price reduce.
      * @since 1.0.0
      */
-    public function get_price_reduce_day() {
+    public function get_per_day_reduce() {
         return $this->get_price_diff_final() / (int) $this->price_reduce_days;
     }
 }

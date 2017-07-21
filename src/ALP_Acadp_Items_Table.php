@@ -154,21 +154,19 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @param ALP_Acadp_Items_Table_Item $item
      * @return string
      * @since 1.0.0
-     * @todo Translate output string!
      */
     public function column_price( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->price . ' Kč';
-    }
+        if( $item->price == $item->price_orig ) {
+            $msg = __( '<span style="color: blue;">%s Kč</span>', ALP_SLUG );
+        }
+        else if( $item->price > $item->get_price_final() ) {
+            $msg = __( '<span style="color: #f30;">%s Kč</span>', ALP_SLUG );
+        }
+        else if( $item->price == $item->get_price_final() ) {
+            $msg = __( '<span style="color: green;">%s Kč</span>', ALP_SLUG );
+        }
 
-    /**
-     * @internal Renders contents of "price_diff" column.
-     * @param ALP_Acadp_Items_Table_Item $item
-     * @return string
-     * @since 1.0.0
-     * @todo Translate output string!
-     */
-    public function column_price_diff( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->get_price_diff() . ' Kč';
+        return sprintf( $msg, $item->price );
     }
 
     /**
@@ -179,6 +177,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     public function column_price_diff_final( ALP_Acadp_Items_Table_Item $item ) {
         $msg = __( '<span title="Hotové snížení ceny z cílového snížení ceny."><b>%s</b> Kč ze <b>%s</b> Kč</span>', ALP_SLUG );
+
         return sprintf( $msg, $item->get_price_diff(), $item->get_price_diff_final() );
     }
 
@@ -216,14 +215,14 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
     }
 
     /**
-     * @internal Renders contents of "price_reduce_days" column.
+     * @internal Renders contents of "per_day_reduce" column.
      * @param ALP_Acadp_Items_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price_reduce_day( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_per_day_reduce( ALP_Acadp_Items_Table_Item $item ) {
         $msg = __( '%s Kč', ALP_SLUG );
-        return sprintf( $msg, $item->get_price_reduce_day() );
+        return sprintf( $msg, round( $item->get_per_day_reduce(), 0 ) );
     }
 
     /**
@@ -233,11 +232,13 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_reduce_days( ALP_Acadp_Items_Table_Item $item ) {
-        $days = (int) $item->price_reduce_days;
-        $x    = (int) $item->get_price_diff() / $days;
-        $msg  = '<span title="Hotovo dnů z celkového počtu dnů."><b>%s</b> z <b>%s</b> dnů</span>';
+        $total_days     = (int) $item->price_reduce_days;
+        $per_day_reduce = $item->get_per_day_reduce();
+        $current_reduce = $item->price_orig - $item->price;
+        $current_days   = round( ( $current_reduce / $per_day_reduce ) );
+        $message        = '<span title="Hotovo dnů z celkového počtu dnů."><b>%s</b> z <b>%s</b> dnů</span>';
 
-        return sprintf( $msg, $x, $days );
+        return sprintf( $message, $current_days, $total_days );
     }
 
     /**
@@ -277,12 +278,11 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             'title'             => __( 'Název', ALP_SLUG ),
             'price_orig'        => __( 'Původní cena', ALP_SLUG ),
             'price'             => __( 'Současná cena', ALP_SLUG ),
-            //'price_diff'        => __( '<abbr title="Současný rozdíl cen">SRC</abbr>', ALP_SLUG ),
             'price_final'       => __( 'Konečná cena', ALP_SLUG ),
             'price_reduce'      => __( '<abbr title="Snížení v %">S</abbr>', ALP_SLUG ),
             'price_diff_final'  => __( 'Snížení (cena)', ALP_SLUG ),
             'price_reduce_days' => __( 'Snížení (dny)', ALP_SLUG ),
-            'price_reduce_day'  => __( '<abbr title="Snížení za den v Kč">SZD</abbr>', ALP_SLUG ),
+            'per_day_reduce'  => __( '<abbr title="Snížení za den v Kč">SZD</abbr>', ALP_SLUG ),
         ];
         return $columns;
     }
@@ -322,7 +322,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             //'price_diff_final'  => ['price_diff_final', false],
             'price_reduce'      => ['price_reduce', false],
             //'price_reduce_days' => ['price_reduce_days', false],
-            //'price_reduce_day'  => ['price_reduce_day', false],
+            //'per_day_reduce'  => ['per_day_reduce', false],
         ];
         return $columns;
     }
@@ -420,19 +420,43 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             'nopaging'    => true,
             'post_type'   => 'acadp_listings', 
             'post_status' => 'publish',
+            'meta_query'  => [
+                [
+                    'key'     => 'price',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key'     => 'price_orig',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key'     => 'price_reduce',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key'     => 'price_reduce_days',
+                    'value'   => '',
+                    'compare' => '!=',
+                ],
+            ],
         ] );
 
-        if( $query->have_posts() ) {
-            foreach( $query->get_posts() as $post ) {
-                $data[] = new ALP_Acadp_Items_Table_Item(
-                        $post->ID,
-                        $post->post_title,
-                        get_post_meta( $post->ID, 'price', true ),
-                        get_post_meta( $post->ID, 'price_reduce', true ),
-                        get_post_meta( $post->ID, 'price_reduce_days', true ),
-                        get_post_meta( $post->ID, 'price_orig', true )
-                );
-            }
+        if( ! $query->have_posts() ) {
+            return $data;
+        }
+
+        foreach( $query->get_posts() as $post ) {
+            $data[] = new ALP_Acadp_Items_Table_Item(
+                    $post->ID,
+                    $post->post_title,
+                    get_post_meta( $post->ID, 'price', true ),
+                    get_post_meta( $post->ID, 'price_reduce', true ),
+                    get_post_meta( $post->ID, 'price_reduce_days', true ),
+                    get_post_meta( $post->ID, 'price_orig', true )
+            );
         }
 
         return $data;
