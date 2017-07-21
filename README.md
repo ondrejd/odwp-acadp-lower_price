@@ -95,9 +95,9 @@ Přehled počátečních úkolů k dokončení __verze 1.0.0__.
 * projít zdrojáky
   - kvůli kvalitě (správné názvy metod, odsazení atp.)
   - zapomenuté komentáře a _TODO_
-  - ujistit se, že je možný překlad a vygenerovat adresář `languages`
+  - ujistit se, že je možný překlad a vygenerovat adresář `languages` a přidat defaultní `PO` a `POT` soubory
   - smazat soubor `TODO.md` (nebo přesunout do souboru [`README.md`][10])
-  - dokončit soubor [`README.md`][10]
+  - dokončit soubor [`README.md`][10] a zároveň vytvořit zkrácenou anglickou verzi [`README.en.md`][11]
 * vypublikovat na [GitHub][6] první release (__verze 1.0.0__)
 * napsat příspěvek na [ondrejd.com][7]
 
@@ -110,6 +110,6 @@ Přehled počátečních úkolů k dokončení __verze 1.0.0__.
 [7]: https://ondrejd.com/
 [8]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/src/ALP_Screen_Prototype.php
 [9]: https://developer.wordpress.org/reference/classes/wp_list_table/
-[10]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/README.md
+[11]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/README.md
 
 
