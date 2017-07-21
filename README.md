@@ -89,7 +89,17 @@ Přehled počátečních úkolů k dokončení __verze 1.0.0__.
   - ~~uvést čas tohoto posledního spuštění~~
   - __uložit log o změnách__
 * __Stránka s výpisem provedených změn cen__
-  - vytvořit tabulku `odwpalp-log` a zároveň i odpovídající třídu `ALP_Log_DbTable`
+  - vytvořit tabulku `odwpalp-log` a zároveň i odpovídající třídu `ALP_Log_DbTable`.
+
+    Tabulka bude mít tuto strukturu:
+
+    | Název sloupce | Typ sloupce  | Defaultní hodnota | Popis                      |
+    |---------------|--------------|:------------------|----------------------------|
+    | `log_id`      | `bigint(20)` | _---_             | Identifikátor záznamu      |
+    | `created`     | `datetime`   | _NOW_             | Datum vytvoření            |
+    | `post_id`     | `biging(20)` | _---_             | Identifikátor inzerátu     |
+    | `price_orig`  | `int(10)`    | _---_             | Původní cena (před změnou) |
+    | `price_new`   | `int(10)`    | _---_             | Nová cena (po změně)       |
   - vytvořit třídu `ALP_Log_Screen` (dědice [ALP_Screen_Prototype][8])
   - vytvořit třídu `ALP_Log_Table` (dědice [WP_List_Table][9])
 * projít zdrojáky
