@@ -72,12 +72,44 @@ update_post_meta( $post_id, 'price_orig', $price );
     </div>
     <div class="col-md-4"></div>
 </div>
-<!-- //[ondrejd]
+<!-- //[ondrejd] -->
 ```
+
+# TODO
+
+Přehled počátečních úkolů k dokončení __verze 1.0.0__.
+
+* ~~Základní struktura pluginu (včetně závislosti na [_wp_][1] i [_acadp_][2])~~
+* ~~Stránka s nastavením pluginu:~~
+  - ~~kdy se má spouštět skript na změnu cen~~
+* ~~Stránka s přehledem všech [_acadp_][2] inzerátů a stavu a vývoje jejich cen~~
+  - ~~přidat podbarvení dle stavu vývoje ceny inzerátu~~
+* ~~Samotná funkcionalita pro snižování cen (přes [_WP\_Cron_][5])~~
+  - ~~provést snížení cen~~
+  - ~~uvést čas tohoto posledního spuštění~~
+  - __uložit log o změnách__
+* __Stránka s výpisem provedených změn cen__
+  - vytvořit tabulku `odwpalp-log` a zároveň i odpovídající třídu `ALP_Log_DbTable`
+  - vytvořit třídu `ALP_Log_Screen` (dědice [ALP_Screen_Prototype][8])
+  - vytvořit třídu `ALP_Log_Table` (dědice [WP_List_Table][9])
+* projít zdrojáky
+  - kvůli kvalitě (správné názvy metod, odsazení atp.)
+  - zapomenuté komentáře a _TODO_
+  - ujistit se, že je možný překlad a vygenerovat adresář `languages`
+  - smazat soubor `TODO.md` (nebo přesunout do souboru [`README.md`][10])
+  - dokončit soubor [`README.md`][10]
+* vypublikovat na [GitHub][6] první release (__verze 1.0.0__)
+* napsat příspěvek na [ondrejd.com][7]
 
 [1]: https://wordpress.org/
 [2]: https://wordpress.org/plugins/advanced-classifieds-and-directory-pro/
 [3]: https://nepotrebujem.eu/
 [4]: mailto:ondrejd@gmail.com
-[5]: https://developer.wordpress.org/reference/functions/wp_cron/
+[5]: https://developer.wordpress.org/plugins/cron/
+[6]: https://github.com/ondrejd/odwp-acadp-lower_price
+[7]: https://ondrejd.com/
+[8]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/src/ALP_Screen_Prototype.php
+[9]: https://developer.wordpress.org/reference/classes/wp_list_table/
+[10]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/README.md
+
 
