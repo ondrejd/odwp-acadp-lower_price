@@ -14,6 +14,7 @@
   - kvůli kvalitě (správné názvy metod, odsazení atp.)
   - zapomenuté komentáře a _TODO_
   - ujistit se, že je možný překlad a vygenerovat adresář `languages`
+  - smazat soubor `TODO.md`
 * vypublikovat na [GitHub][4] první release (__verze 1.0.0__)
 * napsat příspěvek na [ondrejd.com][5]
 
