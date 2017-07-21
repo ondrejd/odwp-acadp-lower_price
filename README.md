@@ -110,6 +110,7 @@ Přehled počátečních úkolů k dokončení __verze 1.0.0__.
 [7]: https://ondrejd.com/
 [8]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/src/ALP_Screen_Prototype.php
 [9]: https://developer.wordpress.org/reference/classes/wp_list_table/
-[11]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/README.md
+[10]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/README.md
+[11]: https://github.com/ondrejd/odwp-acadp-lower_price/blob/master/README.en.md
 
 
