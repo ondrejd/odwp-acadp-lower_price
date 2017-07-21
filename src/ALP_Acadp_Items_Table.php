@@ -178,7 +178,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_diff_final( ALP_Acadp_Items_Table_Item $item ) {
-        $msg = __( '<span title="Aktuální snížení ceny ku cílovému.">sníženo o %s Kč ze %s Kč</span>', ALP_SLUG );
+        $msg = __( '<span title="Hotové snížení ceny z cílového snížení ceny."><b>%s</b> Kč ze <b>%s</b> Kč</span>', ALP_SLUG );
         return sprintf( $msg, $item->get_price_diff(), $item->get_price_diff_final() );
     }
 
@@ -231,19 +231,13 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @param ALP_Acadp_Items_Table_Item $item
      * @return string
      * @since 1.0.0
-     * @todo Translate output string!
      */
     public function column_price_reduce_days( ALP_Acadp_Items_Table_Item $item ) {
         $days = (int) $item->price_reduce_days;
         $x    = (int) $item->get_price_diff() / $days;
+        $msg  = '<span title="Hotovo dnů z celkového počtu dnů."><b>%s</b> z <b>%s</b> dnů</span>';
 
-        if( $days >= 1 && $days <= 4 ) {
-            return "<span title='Sníženo o dnů z celkového počtu.'>hotovo <b>$x</b> z <b>$days</b> dny";
-        } else {
-            return "<span title='Sníženo o dnů z celkového počtu.'>hotovo <b>$x</b> z <b>$days</b> dnů";
-        }
-
-        return '';
+        return sprintf( $msg, $x, $days );
     }
 
     /**
