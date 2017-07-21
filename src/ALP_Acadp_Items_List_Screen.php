@@ -18,7 +18,7 @@ if( ! class_exists( 'ALP_Acadp_Items_Table' ) ) {
 if( ! class_exists( 'ALP_Acadp_Items_List_Screen' ) ) :
 
 /**
- * Administration screen for the log viewer.
+ * Screen with table of <em>acadp</em> listings and status of their prices.
  * @since 1.0.0
  */
 class ALP_Acadp_Items_List_Screen extends ALP_Screen_Prototype {
