@@ -154,6 +154,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @param ALP_Acadp_Items_Table_Item $item
      * @return string
      * @since 1.0.0
+     * @todo Translate output string!
      */
     public function column_price( ALP_Acadp_Items_Table_Item $item ) {
         return $item->price . ' Kč';
@@ -164,6 +165,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @param ALP_Acadp_Items_Table_Item $item
      * @return string
      * @since 1.0.0
+     * @todo Translate output string!
      */
     public function column_price_diff( ALP_Acadp_Items_Table_Item $item ) {
         return $item->get_price_diff() . ' Kč';
@@ -176,7 +178,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_diff_final( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->get_price_diff_final() . ' Kč';
+        $msg = __( '<span title="Aktuální snížení ceny ku cílovému.">sníženo o %s Kč ze %s Kč</span>', ALP_SLUG );
+        return sprintf( $msg, $item->get_price_diff(), $item->get_price_diff_final() );
     }
 
     /**
@@ -186,7 +189,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_final( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->get_price_final() . ' Kč';
+        $msg = __( '%s Kč', ALP_SLUG );
+        return sprintf( $msg, $item->get_price_final() );
     }
 
     /**
@@ -196,7 +200,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_orig( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->price_orig . ' Kč';
+        $msg = __( '%s Kč', ALP_SLUG );
+        return sprintf( $msg, $item->price_orig );
     }
 
     /**
@@ -206,7 +211,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_reduce( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->price_reduce . ' %';
+        $msg = __( '%s %%', ALP_SLUG );
+        return sprintf( $msg, $item->price_reduce );
     }
 
     /**
@@ -216,7 +222,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_reduce_day( ALP_Acadp_Items_Table_Item $item ) {
-        return $item->get_price_reduce_day() . ' Kč';
+        $msg = __( '%s Kč', ALP_SLUG );
+        return sprintf( $msg, $item->get_price_reduce_day() );
     }
 
     /**
@@ -224,14 +231,16 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      * @param ALP_Acadp_Items_Table_Item $item
      * @return string
      * @since 1.0.0
+     * @todo Translate output string!
      */
     public function column_price_reduce_days( ALP_Acadp_Items_Table_Item $item ) {
         $days = (int) $item->price_reduce_days;
+        $x    = (int) $item->get_price_diff() / $days;
 
         if( $days >= 1 && $days <= 4 ) {
-            return $days . ' dny';
+            return "<span title='Sníženo o dnů z celkového počtu.'>hotovo <b>$x</b> z <b>$days</b> dny";
         } else {
-            return $days . ' dnů';
+            return "<span title='Sníženo o dnů z celkového počtu.'>hotovo <b>$x</b> z <b>$days</b> dnů";
         }
 
         return '';
@@ -272,13 +281,13 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             'cb'                => '<input type="checkbox">',
             'id'                => __( 'ID', ALP_SLUG ),
             'title'             => __( 'Název', ALP_SLUG ),
-            'price_orig'        => __( '<abbr title="Původní cena">PC</abbr>', ALP_SLUG ),
-            'price'             => __( '<abbr title="Současná cena">SC</abbr>', ALP_SLUG ),
-            'price_diff'        => __( '<abbr title="Současný rozdíl cen">SRC</abbr>', ALP_SLUG ),
-            'price_final'       => __( '<abbr title="Konečná cena">KC</abbr>', ALP_SLUG ),
-            'price_diff_final'  => __( '<abbr title="Konečný rozdíl cen">KRC</abbr>', ALP_SLUG ),
+            'price_orig'        => __( 'Původní cena', ALP_SLUG ),
+            'price'             => __( 'Současná cena', ALP_SLUG ),
+            //'price_diff'        => __( '<abbr title="Současný rozdíl cen">SRC</abbr>', ALP_SLUG ),
+            'price_final'       => __( 'Konečná cena', ALP_SLUG ),
             'price_reduce'      => __( '<abbr title="Snížení v %">S</abbr>', ALP_SLUG ),
-            'price_reduce_days' => __( '<abbr title="Doba snižování ve dnech">DS</abbr>', ALP_SLUG ),
+            'price_diff_final'  => __( 'Snížení (cena)', ALP_SLUG ),
+            'price_reduce_days' => __( 'Snížení (dny)', ALP_SLUG ),
             'price_reduce_day'  => __( '<abbr title="Snížení za den v Kč">SZD</abbr>', ALP_SLUG ),
         ];
         return $columns;
@@ -318,7 +327,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
             //'price_final'       => ['price_final', false],
             //'price_diff_final'  => ['price_diff_final', false],
             'price_reduce'      => ['price_reduce', false],
-            'price_reduce_days' => ['price_reduce_days', false],
+            //'price_reduce_days' => ['price_reduce_days', false],
             //'price_reduce_day'  => ['price_reduce_day', false],
         ];
         return $columns;
@@ -414,8 +423,9 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
     public function get_data() {
         $data = [];
         $query = new WP_Query( [
-            'nopaging'  => false,
-            'post_type' => 'acadp_listings', 
+            'nopaging'    => true,
+            'post_type'   => 'acadp_listings', 
+            'post_status' => 'publish',
         ] );
 
         if( $query->have_posts() ) {

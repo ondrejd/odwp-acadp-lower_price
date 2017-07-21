@@ -28,14 +28,14 @@ $alp_acadp_items_table->prepare_items();
 $next = ALP_Plugin::get_next_scheduled();
 
 // Print message about next scheduled running of lower price script.
-$msg1 = __( 'Příští naplánované snížení cen proběhne dnes v <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
+$msg1 = __( 'Příští naplánované snížení cen proběhne dnes <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
 $hours = ( $next['hours_left'] == 1 ) ? '1 hodinu' : ( ( $next['hours_left'] > 4 ) ? $next['hours_left'] . ' hodin' : $next['hours_left'] . ' hodiny' );
 
 if( $next['is_next_tomorrow'] ) {
-    $msg1 = __( 'Příští naplánované snížení cen proběhne zítra v <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
+    $msg1 = __( 'Příští naplánované snížení cen proběhne zítra <b>%s</b> (za <b>%s hodin</b>).', ALP_SLUG );
 }
 
-ALP_Plugin::print_admin_notice( sprintf( $msg1, $next['next_scheduled'], $next['hours_left'] ), 'info', true );
+ALP_Plugin::print_admin_notice( sprintf( $msg1, $next['next_scheduled_full'], $next['hours_left'] ), 'info', true );
 
 // Print message about last executed lower price script.
 $last_scheduled = ALP_Plugin::get_option( 'last_execution_time' );

@@ -54,14 +54,7 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function activate() {
-        // Register our wp-cron that lower the prices
-        $next_scheduled = self::get_option( 'execution_time' );
-        $timestamp = wp_next_scheduled( self::CRON_EVENT_KEY );
-
-        if( $timestamp == false ) {
-            $time = strtotime( $next_scheduled . ':00' );
-            wp_schedule_event( $time, 'daily', self::CRON_EVENT_KEY );
-        }
+        self::reset_wpcron_scheduled();
     }
 
     /**
@@ -70,7 +63,7 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function deactivate() {
-        //...
+        self::reset_wpcron_scheduled( true );
     }
 
     /**
@@ -370,23 +363,58 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function get_next_scheduled() {
+        // Reset wpcron script if needed
         $next = wp_next_scheduled( ALP_Plugin::CRON_EVENT_KEY );
-        $next_txt = date( 'Y-m-d H:i:s', $timestamp );
+        if( $next === false ) {
+            self::reset_wpcron_scheduled();
+        }
+
+        // Gather required data
+        $next_his = date( 'H:i', $next );
+        $next_txt = date( 'Y-m-d' ) . " {$next_his}:00";
         $next_obj = new DateTime( $next_txt );
         $is_tomorrow = false;
 
+        // Add day if needed
         if( time() > strtotime( $next_txt ) ) {
             $is_tomorrow = true;
             $next_obj->add( new DateInterval( 'P1D' ) );
         }
 
+        // Calculate hours left
         $hours_left = $next_obj->diff( new DateTime )->format( '%h' );
 
+        // Return data
         return [
-            'next_scheduled' => date( 'H:i', $next ),
+            'next_scheduled' => $next_his,
+            // TODO Should be localized!
+            'next_scheduled_full' => $next_obj->format( 'j.n.Y \v H:i' ),
             'hours_left' => $hours_left,
             'is_next_tomorrow' => $is_tomorrow,
         ];
+    }
+
+    /**
+     * @internal Resets next scheduled execution of {@see ALP_Plugin::lower_price()}.
+     * @param boolean $start_again (Optional.) Defaultly TRUE.
+     * @return void
+     * @since 1.0.0
+     */
+    private static function reset_wpcron_scheduled( $start_again = true ) {
+        $next_scheduled = self::get_option( 'execution_time' );
+        $timestamp      = wp_next_scheduled( self::CRON_EVENT_KEY );
+        $event_args     = [];
+
+        // Remove old (if exists)
+        if( $timestamp !== false ) {
+            wp_unschedule_event( $timestamp, self::CRON_EVENT_KEY, $event_args );
+        }
+
+        // Set new
+        if( $start_again !== false ) {
+            $time = strtotime( $next_scheduled . ':00' );
+            wp_schedule_event( $time, 'daily', self::CRON_EVENT_KEY, $event_args );
+        }
     }
 
     /**
