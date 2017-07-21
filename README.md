@@ -31,13 +31,11 @@ Plugin předpokládá, že produkty, které plugin <abbr title="Advanced Classif
 
 ## Instalace
 
-Pro správnou funkčnost musíte upravit plugin XXX takto:
+Pro správnou funkčnost musíte upravit plugin [Advanced Classifieds & Directory Pro][2] takto:
 
 ### Soubor `public/class-acadp-public-user.php` řádek 844
+
 ```php
-// ...
-$price = acadp_sanitize_amount( $_POST['price'] );
-update_post_meta( $post_id, 'price', $price );
 // [ondrejd] - pridani snizovani ceny
 $price_reduce = (int) $_POST['price_reduce'];
 update_post_meta( $post_id, 'price_reduce', $price_reduce );
@@ -49,7 +47,7 @@ update_post_meta( $post_id, 'price_orig', $price );
 
 ### Soubor `public/partials/user/acadp-public-edit-listing-display.php` řádek 243
 
-```
+```html
 <!-- [ondrejd] - pridani snizovani ceny -->
 <div class="row">
     <div class="col-md-4">
