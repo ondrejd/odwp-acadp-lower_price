@@ -134,16 +134,20 @@ class ALP_Log_DbTable {
         $data = [];
 
         foreach( $raw_results as $item ) {
-            $data[] = new ALP_Log_Table_Item(
-                $item['log_id'],
-                $item['created'],
-                $item['post_id'],
-                $item['price_orig'],
-                $item['price_new']
-            );
+            $data[] = self::create_table_item_obj( $item );
         }
 
         return $data;
+    }
+
+    protected static function create_table_item_obj( array $item ) {
+        return new ALP_Log_Table_Item(
+            $item['log_id'],
+            $item['created'],
+            $item['post_id'],
+            $item['price_orig'],
+            $item['price_new']
+        );
     }
 
     /**

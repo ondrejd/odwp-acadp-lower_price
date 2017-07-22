@@ -132,7 +132,7 @@ class ALP_Log_Table extends WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="log_id[]" value="%s">', $item->id
+            '<input type="checkbox" name="log_id[]" value="%s">', $item->get_log_id()
         );
     }
 

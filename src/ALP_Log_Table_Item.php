@@ -131,7 +131,7 @@ class ALP_Log_Table_Item {
      * @return integer
      */
     public function get_price_new() {
-        return $this->price_orig;
+        return $this->price_new;
     }
 
     /**

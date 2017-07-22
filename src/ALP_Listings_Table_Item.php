@@ -16,6 +16,7 @@ if( ! class_exists( 'ALP_Listings_Table_Item' ) ) :
 /**
  * Log record.
  * @since 1.0.0
+ * @todo Refactor - properties should be protected all accessed only through "get_*" and "set_*" methods.
  */
 class ALP_Listings_Table_Item {
 
