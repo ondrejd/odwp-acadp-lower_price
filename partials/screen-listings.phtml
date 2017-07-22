@@ -11,15 +11,15 @@ if( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if( ! class_exists( 'ALP_Acadp_Items_Table' ) ) {
-    require_once( DL_PATH . 'src/ALP_Acadp_Items_Table.php' );
+if( ! class_exists( 'ALP_Listings_Table' ) ) {
+    require_once( DL_PATH . 'src/ALP_Listings_Table.php' );
 }
 
 /**
- * @var ALP_Acadp_Items_Table $alp_acadp_items_table
+ * @var ALP_Listings_Table $alp_listings_table
  */
-$alp_acadp_items_table = new ALP_Acadp_Items_Table();
-$alp_acadp_items_table->prepare_items();
+$alp_listings_table = new ALP_Listings_Table();
+$alp_listings_table->prepare_items();
 
 /**
  * @var array $next
@@ -50,8 +50,8 @@ if( ! empty( $last_scheduled ) ) {// Byl uz skript vubec spusten?
 <div class="wrap">
     <h1><?php _e( 'Přehled cen inzerátů', ALP_SLUG ) ?></h1>
     <form method="post">
-        <input type="hidden" name="page" value="<?php echo ALP_Acadp_Items_List_Screen::SLUG ?>">
-        <?php $alp_acadp_items_table->display() ?>
+        <input type="hidden" name="page" value="<?php echo ALP_Listings_Screen::SLUG ?>">
+        <?php $alp_listings_table->display() ?>
         <input type="submit" name="do_lower_prices" value="Sniž ceny ručně" class="button button-primary">
     </form>
 </div>

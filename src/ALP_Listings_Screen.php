@@ -11,22 +11,22 @@ if( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if( ! class_exists( 'ALP_Acadp_Items_Table' ) ) {
-    require_once( ALP_PATH . 'src/ALP_Acadp_Items_Table.php' );
+if( ! class_exists( 'ALP_Listings_Table' ) ) {
+    require_once( ALP_PATH . 'src/ALP_Listings_Table.php' );
 }
 
-if( ! class_exists( 'ALP_Acadp_Items_List_Screen' ) ) :
+if( ! class_exists( 'ALP_Listings_Screen' ) ) :
 
 /**
  * Screen with table of <em>acadp</em> listings and status of their prices.
  * @since 1.0.0
  */
-class ALP_Acadp_Items_List_Screen extends ALP_Screen_Prototype {
+class ALP_Listings_Screen extends ALP_Screen_Prototype {
     /**
      * @var string
      * @since 1.0.0
      */
-    const SLUG = ALP_SLUG . '-acadp_items';
+    const SLUG = ALP_SLUG . '-listings';
 
     /**
      * Constructor.

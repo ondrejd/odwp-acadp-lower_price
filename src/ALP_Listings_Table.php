@@ -15,17 +15,17 @@ if( ! class_exists( 'WP_List_Table' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-if( ! class_exists( 'ALP_Acadp_Items_Table_Item' ) ) {
-    require_once( ALP_PATH . 'src/ALP_Acadp_Items_Table_Item.php' );
+if( ! class_exists( 'ALP_Listings_Table_Item' ) ) {
+    require_once( ALP_PATH . 'src/ALP_Listings_Table_Item.php' );
 }
 
-if( ! class_exists( 'ALP_Acadp_Items_Table' ) ) :
+if( ! class_exists( 'ALP_Listings_Table' ) ) :
 
 /**
  * Table with products created by "Advanced Classifieds & Directory Pro".
  * @since 1.0.0
  */
-class ALP_Acadp_Items_Table extends WP_List_Table {
+class ALP_Listings_Table extends WP_List_Table {
 
     /**
      * @var string Ascendant direction of the sorting.
@@ -92,17 +92,17 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
     public static function get_options() {
         $user = get_current_user_id();
 
-        $per_page = get_user_meta( $user, ALP_Acadp_Items_List_Screen::SLUG . '-per_page', true );
+        $per_page = get_user_meta( $user, ALP_Listings_Screen::SLUG . '-per_page', true );
         if( strlen( $per_page ) == 0 ) {
             $per_page = self::DEFAULT_PER_PAGE;
         }
 
-        $sort_col = get_user_meta( $user, ALP_Acadp_Items_List_Screen::SLUG . '-sort_col', true );
+        $sort_col = get_user_meta( $user, ALP_Listings_Screen::SLUG . '-sort_col', true );
         if( strlen( $sort_col ) == 0 ) {
             $sort_col = self::DEFAULT_SORT_COL;
         }
 
-        $sort_dir = get_user_meta( $user, ALP_Acadp_Items_List_Screen::SLUG . '-sort_dir', true );
+        $sort_dir = get_user_meta( $user, ALP_Listings_Screen::SLUG . '-sort_dir', true );
         if( strlen( $sort_dir ) == 0 ) {
             $sort_dir = self::DEFAULT_SORT_DIR;
         }
@@ -119,7 +119,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
 
     /**
      * Renders checkbox column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
@@ -131,31 +131,31 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
 
     /**
      * @internal Renders contents of "id" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_id( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_id( ALP_Listings_Table_Item $item ) {
         return $item->id;
     }
 
     /**
      * @internal Renders contents of "title" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_title( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_title( ALP_Listings_Table_Item $item ) {
         return $item->title;
     }
 
     /**
      * @internal Renders contents of "price" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_price( ALP_Listings_Table_Item $item ) {
         if( $item->price == $item->price_orig ) {
             $msg = __( '<span style="color: blue;">%s Kč</span>', ALP_SLUG );
         }
@@ -171,11 +171,11 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
 
     /**
      * @internal Renders contents of "price_diff_final" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price_diff_final( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_price_diff_final( ALP_Listings_Table_Item $item ) {
         $msg = __( '<span title="Hotové snížení ceny z cílového snížení ceny."><b>%s</b> Kč ze <b>%s</b> Kč</span>', ALP_SLUG );
 
         return sprintf( $msg, $item->get_price_diff(), $item->get_price_diff_final() );
@@ -183,55 +183,55 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
 
     /**
      * @internal Renders contents of "price_final" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price_final( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_price_final( ALP_Listings_Table_Item $item ) {
         $msg = __( '%s Kč', ALP_SLUG );
         return sprintf( $msg, $item->get_price_final() );
     }
 
     /**
      * @internal Renders contents of "price_orig" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price_orig( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_price_orig( ALP_Listings_Table_Item $item ) {
         $msg = __( '%s Kč', ALP_SLUG );
         return sprintf( $msg, $item->price_orig );
     }
 
     /**
      * @internal Renders contents of "price_reduce" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price_reduce( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_price_reduce( ALP_Listings_Table_Item $item ) {
         $msg = __( '%s %%', ALP_SLUG );
         return sprintf( $msg, $item->price_reduce );
     }
 
     /**
      * @internal Renders contents of "per_day_reduce" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_per_day_reduce( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_per_day_reduce( ALP_Listings_Table_Item $item ) {
         $msg = __( '%s Kč', ALP_SLUG );
         return sprintf( $msg, round( $item->get_per_day_reduce(), 0 ) );
     }
 
     /**
      * @internal Renders contents of "price_reduce_days" column.
-     * @param ALP_Acadp_Items_Table_Item $item
+     * @param ALP_Listings_Table_Item $item
      * @return string
      * @since 1.0.0
      */
-    public function column_price_reduce_days( ALP_Acadp_Items_Table_Item $item ) {
+    public function column_price_reduce_days( ALP_Listings_Table_Item $item ) {
         $total_days     = (int) $item->price_reduce_days;
         $per_day_reduce = $item->get_per_day_reduce();
         $current_reduce = $item->price_orig - $item->price;
@@ -248,7 +248,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     public function display_rows() {
         foreach( $this->items as $item ) {
-            if( ! ( $item instanceof \ALP_Acadp_Items_Table_Item ) ) {
+            if( ! ( $item instanceof \ALP_Listings_Table_Item ) ) {
                 continue;
             }
 
@@ -378,8 +378,8 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
      */
     private function get_order_args() {
         $options  = self::get_options();
-        $orderby = filter_input( INPUT_POST, ALP_Acadp_Items_List_Screen::SLUG . '-sort_col' );
-        $order = filter_input( INPUT_POST, ALP_Acadp_Items_List_Screen::SLUG . '-sort_dir' );
+        $orderby = filter_input( INPUT_POST, ALP_Listings_Screen::SLUG . '-sort_col' );
+        $order = filter_input( INPUT_POST, ALP_Listings_Screen::SLUG . '-sort_dir' );
 
         if( empty( $orderby ) ) {
             $orderby = filter_input( INPUT_GET, 'orderby' );
@@ -449,7 +449,7 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
         }
 
         foreach( $query->get_posts() as $post ) {
-            $data[] = new ALP_Acadp_Items_Table_Item(
+            $data[] = new ALP_Listings_Table_Item(
                     $post->ID,
                     $post->post_title,
                     get_post_meta( $post->ID, 'price', true ),
@@ -464,12 +464,12 @@ class ALP_Acadp_Items_Table extends WP_List_Table {
 
     /**
      * @internal Sorting method for the table data.
-     * @param ALP_Acadp_Items_Table_Item $a The first row.
-     * @param ALP_Acadp_Items_Table_Item $b The second row.
+     * @param ALP_Listings_Table_Item $a The first row.
+     * @param ALP_Listings_Table_Item $b The second row.
      * @return integer
      * @since 1.0.0
      */
-    protected function usort_reorder( ALP_Acadp_Items_Table_Item $a, ALP_Acadp_Items_Table_Item $b ) {
+    protected function usort_reorder( ALP_Listings_Table_Item $a, ALP_Listings_Table_Item $b ) {
         extract( $this->get_order_args() );
         $val1 = null;
         $val2 = null;

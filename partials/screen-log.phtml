@@ -27,6 +27,6 @@ $alp_log_table->prepare_items();
     <form method="post">
         <input type="hidden" name="page" value="<?php echo ALP_Log_Screen::SLUG ?>">
         <?php $alp_log_table->display() ?>
-        <input type="submit" name="erase_log" value="<?php _e( 'Smazat log', ALP_SLUG ) ?>" class="button button-primary">
+        <p><span><?php printf( __( 'Celková velikost logu: %s.', ALP_SLUG ), '<strong style="color: #f30;">XXX kB</strong>' ) ?></span> <input type="submit" name="erase_log" value="<?php _e( 'Smazat celý log', ALP_SLUG ) ?>" class="button button-primary"></p>
     </form>
 </div>

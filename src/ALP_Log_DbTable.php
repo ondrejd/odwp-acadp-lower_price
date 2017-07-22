@@ -20,6 +20,14 @@ if( ! class_exists( 'ALP_Log_DbTable' ) ) :
  */
 class ALP_Log_DbTable {
     /**
+     * @return string Returns table name.
+     * @since 1.0.0
+     */
+    public static function get_table_name() {
+        return $wpdb->prefix . '_' . ALP_SLUG . '_log';
+    }
+
+    /**
      * Creates table.
      * @global wpdb $wpdb
      * @return void
@@ -28,7 +36,7 @@ class ALP_Log_DbTable {
     public static function create_table() {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . '_' . ALP_SLUG . '_log';
+        $table_name = self::get_table_name();
         $charset_collate = $wpdb->get_charset_collate();
         $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
 	                `log_id` BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -47,17 +55,46 @@ class ALP_Log_DbTable {
      * Inserts new log record.
      * @global wpdb $wpdb
      * @param \ALP_Log_Table_Item|array $item
-     * @return array Returns array of identifiers of new database items.
+     * @return array|integer Returns array of identifiers of new database items.
      * @since 1.0.0
      */
-    public static function insert( \ALP_Log_Table_Item $log ) {
+    public static function insert( $log ) {
         global $wpdb;
 
         $new_id = [];
 
-        // ...
+        if( ( $log instanceof \ALP_Log_Table_Item ) ) {
+            return self::insert_item( $log );
+        }
+        else if( is_array( $log ) ) {
+            foreach( $log as $log_item ) {
+                if( ( $log_item instanceof \ALP_Log_Table_Item ) ) {
+                    $new_id[] = self::insert_item( $log_item );
+                }
+            }
+        }
 
         return $new_id;
+    }
+
+    /**
+     * @internal Inserts new log item into database.
+     * @param \ALP_Log_Table_Item $item
+     * @return integer Returns ID of the new log item.
+     * @since 1.0.0
+     */
+    protected static function insert_item( \ALP_Log_Table_Item $item ) {
+        $wpdb->insert(
+	        self::get_table_name(), [
+		        'log_id'     => $item->get_log_id(),
+		        'created'    => $item->get_created(),
+		        'post_id'    => $item->get_post_id(),
+		        'price_orig' => $item->get_price_orig(),
+		        'price_new'  => $item->get_price_new(),
+	        ], [ '%d', '%s', '%d', '%d', '%d' ]
+        );
+
+        return $wpdb->insert_id;
     }
 
     /**
@@ -70,6 +107,7 @@ class ALP_Log_DbTable {
     public static function remove( $log ) {
         global $wpdb;
 
+        $table_name = self::get_table_name();
         $count = 0;
 
         // ...
@@ -86,6 +124,7 @@ class ALP_Log_DbTable {
     public static function select_all() {
         global $wpdb;
 
+        $table_name = self::get_table_name();
         $data = [];
 
         // ...
@@ -103,7 +142,11 @@ class ALP_Log_DbTable {
     public static function select_by_id( $id ) {
         global $wpdb;
 
+        $table_name = self::get_table_name();
+
         // ...
+
+        return null;
     }
 
     /**
@@ -121,6 +164,7 @@ class ALP_Log_DbTable {
      * // Where $item(*) are instances of ALP_Log_Table_Item
      * ALP_Log_DbTable::update( [$item1,$item2], ['price_new', 1000.00] );
      * </pre>
+     *
      * @global wpdb $wpdb
      * @param ALP_Log_Table_Item|array|integer $log
      * @param ALP_Log_Table_Item|array $data (Optional.)
@@ -130,7 +174,12 @@ class ALP_Log_DbTable {
     public static function update( $log, $data = null ) {
         global $wpdb;
 
+        $table_name = self::get_table_name();
+        $count = 0;
+
         // ...
+
+        return 0;
     }
 }
 

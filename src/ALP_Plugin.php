@@ -55,6 +55,7 @@ class ALP_Plugin {
      */
     public static function activate() {
         self::reset_wpcron_scheduled();
+        ALP_Log_DbTable::create_table();
     }
 
     /**
@@ -457,6 +458,7 @@ class ALP_Plugin {
      * @see ALP_Plugin::initialize()
      * @return void
      * @since 1.0.0
+     * @todo Log price changes!
      */
     public static function lower_prices() {
         // Get all acadp listings
@@ -494,10 +496,13 @@ class ALP_Plugin {
             return $data;
         }
 
+        $datetime = date( 'Y-m-d H:i:s', time() );
+        $log_items = [];
+
         // Go through all of them
         foreach( $query->get_posts() as $post ) {
             // Prepare helper object from the post (listing)
-            $item = new ALP_Acadp_Items_Table_Item(
+            $item = new ALP_Listings_Table_Item(
                 $post->ID,
                 $post->post_title,
                 get_post_meta( $post->ID, 'price', true ),
@@ -510,17 +515,25 @@ class ALP_Plugin {
 
             // Check if is needed to lower price
             if( $item->price > $price_final ) {
-                // If yes do it
+                // Lower price
                 $per_day_reduce = $item->get_per_day_reduce();
                 $_price_new = ceil( ( $item->price - $per_day_reduce ) );
                 $price_new = ( $_price_new < $price_final ) ? $price_final : $_price_new;
+                //update_post_meta( $post->ID, 'price', $price_new );price_final
 
-                update_post_meta( $post->ID, 'price', $price_new );
+                // Save log
+                $log_item = new ALP_Log_Table_Item();
+                $log_item->set_created( $datetime );
+                $log_item->set_post_id( $item->id );
+                $log_item->set_price_orig( $item->price_orig );
+                $log_item->set_price_new( $item->price );
+                $log_items[] = $log_item;
             }
         }
 
         // Save date and time of last execution
-        self::update_option( 'last_execution_time', date( 'Y-m-d H:i:s', time() ) );
+        self::update_option( 'last_execution_time', $datetime );
+        ALP_Log_DbTable::insert( $log_items );
     }
 }
 

@@ -11,13 +11,13 @@ if( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if( ! class_exists( 'ALP_Acadp_Items_Table_Item' ) ) :
+if( ! class_exists( 'ALP_Listings_Table_Item' ) ) :
 
 /**
  * Log record.
  * @since 1.0.0
  */
-class ALP_Acadp_Items_Table_Item {
+class ALP_Listings_Table_Item {
 
     /**
      * @var integer $id
