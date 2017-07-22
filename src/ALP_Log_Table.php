@@ -353,11 +353,7 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function get_data() {
-        $data = [];
-
-        // ...
-
-        return $data;
+        return ALP_Log_DbTable::select_all();
     }
 
     /**

@@ -130,9 +130,18 @@ class ALP_Log_DbTable {
         global $wpdb;
 
         $table_name = self::get_table_name();
+        $raw_results = $wpdb->get_results( 'SELECT * FROM ' . $table_name . ' ', ARRAY_A );
         $data = [];
 
-        // ...
+        foreach( $raw_results as $item ) {
+            $data[] = new ALP_Log_Table_Item(
+                $item['log_id'],
+                $item['created'],
+                $item['post_id'],
+                $item['price_orig'],
+                $item['price_new']
+            );
+        }
 
         return $data;
     }
