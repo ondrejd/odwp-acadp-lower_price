@@ -21,10 +21,12 @@ if( ! class_exists( 'ALP_Log_DbTable' ) ) :
 class ALP_Log_DbTable {
     /**
      * @return string Returns table name.
+     * @global wpdb $wpdb
      * @since 1.0.0
      */
     public static function get_table_name() {
-        return $wpdb->prefix . '_' . ALP_SLUG . '_log';
+        global $wpdb;
+        return $wpdb->prefix . ALP_SLUG . '_log';
     }
 
     /**

@@ -54,7 +54,10 @@ class ALP_Plugin {
      * @since 1.0.0
      */
     public static function activate() {
+        // Schedule WPCron event
         self::reset_wpcron_scheduled();
+        // Create database table
+        include( ALP_PATH . 'src/ALP_Log_DbTable.php' );
         ALP_Log_DbTable::create_table();
     }
 
