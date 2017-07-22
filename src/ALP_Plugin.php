@@ -522,15 +522,12 @@ class ALP_Plugin {
                 $per_day_reduce = $item->get_per_day_reduce();
                 $_price_new = ceil( ( $item->price - $per_day_reduce ) );
                 $price_new = ( $_price_new < $price_final ) ? $price_final : $_price_new;
-                //update_post_meta( $post->ID, 'price', $price_new );price_final
+                update_post_meta( $post->ID, 'price', $price_new );
 
                 // Save log
-                $log_item = new ALP_Log_Table_Item();
-                $log_item->set_created( $datetime );
-                $log_item->set_post_id( $item->id );
-                $log_item->set_price_orig( $item->price_orig );
-                $log_item->set_price_new( $item->price );
-                $log_items[] = $log_item;
+                $log_items[] = new ALP_Log_Table_Item(
+                    null, $datetime, $item->id, $item->price_orig, $item->price
+                );
             }
         }
 

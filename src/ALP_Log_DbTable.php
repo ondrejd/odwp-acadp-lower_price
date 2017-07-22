@@ -81,11 +81,14 @@ class ALP_Log_DbTable {
 
     /**
      * @internal Inserts new log item into database.
+     * @global wpdb $wpdb
      * @param \ALP_Log_Table_Item $item
      * @return integer Returns ID of the new log item.
      * @since 1.0.0
      */
     protected static function insert_item( \ALP_Log_Table_Item $item ) {
+        global $wpdb;
+
         $wpdb->insert(
 	        self::get_table_name(), [
 		        'log_id'     => $item->get_log_id(),
@@ -101,7 +104,7 @@ class ALP_Log_DbTable {
 
     /**
      * Removes log record
-     * @global wpdb $wpdb.
+     * @global wpdb $wpdb
      * @param ALP_Log_Table_Item|array|integer $log Can be single {@see ALP_Log_Table_Item}, array of {@see ALP_Log_Table_Item}, array of integers (<code>log_id</code>) or just single <code>log_id</code>.
      * @return integer Returns count of removed items.
      * @since 1.0.0
