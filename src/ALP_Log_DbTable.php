@@ -148,8 +148,7 @@ class ALP_Log_DbTable {
         global $wpdb;
 
         $table_name = self::get_table_name();
-        $count = 0;
-        $query = "DELETE FROM {$table_name} WHERE `log_id` = " . intval( $arr_str ) ." LIMIT 1 ";
+        $query = "DELETE FROM {$table_name} WHERE `log_id` = " . intval( $log ) ." LIMIT 1 ";
 
         if( is_array( $log ) ) {
             $arr_str = implode( $log, ',' );
@@ -157,12 +156,10 @@ class ALP_Log_DbTable {
         }
 
         try {
-            $count = $wpdb->query( $query );
+            return $wpdb->query( $query );
         } catch( Exception $e ) {
             return false;
         }
-
-        return $count;
     }
 
     /**

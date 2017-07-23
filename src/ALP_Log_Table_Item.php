@@ -38,6 +38,12 @@ class ALP_Log_Table_Item {
     protected $post_id;
 
     /**
+     * @var string $post_title
+     * @since 1.0.0
+     */
+    private $post_title = '';
+
+    /**
      * @var integer $price_orig
      * @since 1.0.0
      */
@@ -69,47 +75,67 @@ class ALP_Log_Table_Item {
 
     /**
      * @return integer
+     * @since 1.0.0
      */
     public function get_log_id() {
         return $this->log_id;
     }
 
     /**
-     * @param integer $log_id
-     * @return void
-     */
-    public function set_log_id( $log_id ) {
-        $this->log_id = (int) $log_id;
-    }
-
-    /**
+     * @param boolean $formatted (Optional.) Defaultly FALSE.
      * @return string
+     * @since 1.0.0
      */
-    public function get_created() {
-        return $this->created;
-    }
-
-    /**
-     * @param string $created
-     * @return void
-     */
-    public function set_created( $created ) {
-        $this->created = $created;
+    public function get_created( $formatted = false ) {
+        return ( $formatted === true )
+            ? ( new DateTime( $this->created ) )->format( 'j.n.Y H:i' )
+            : $this->created;
     }
 
     /**
      * @return integer
+     * @since 1.0.0
      */
     public function get_post_id() {
         return $this->post_id;
     }
 
     /**
-     * @param integer $post_id
-     * @return void
+     * @return string
+     * @since 1.0.0
      */
-    public function set_post_id( $post_id ) {
-        $this->post_id = (int) $post_id;
+    public function get_post_title() {
+        if( empty( $this->post_id ) ) {
+            return '';
+        }
+
+        if( ! empty( $this->post_title ) ) {
+            return $this->post_title;
+        }
+
+        $post = get_post( $this->get_post_id() );
+
+        if( ( $post instanceof WP_Post ) ) {
+            $this->post_title = $post->post_title;
+        }
+
+        return $this->post_title;
+    }
+
+    /**
+     * @return integer
+     * @since 1.0.0
+     */
+    public function get_price_diff() {
+        return $this->price_orig - $this->price_new;
+    }
+
+    /**
+     * @return integer
+     * @since 1.0.0
+     */
+    public function get_price_new() {
+        return $this->price_new;
     }
 
     /**
@@ -120,26 +146,48 @@ class ALP_Log_Table_Item {
     }
 
     /**
-     * @param integer $price_orig
+     * @param string $created
      * @return void
+     * @since 1.0.0
      */
-    public function set_price_orig( $price_orig ) {
-        $this->price_orig = (int) $price_orig;
+    public function set_created( $created ) {
+        $this->created = $created;
     }
 
     /**
-     * @return integer
+     * @param integer $log_id
+     * @return void
+     * @since 1.0.0
      */
-    public function get_price_new() {
-        return $this->price_new;
+    public function set_log_id( $log_id ) {
+        $this->log_id = (int) $log_id;
+    }
+
+    /**
+     * @param integer $post_id
+     * @return void
+     * @since 1.0.0
+     */
+    public function set_post_id( $post_id ) {
+        $this->post_id = (int) $post_id;
     }
 
     /**
      * @param integer $price_new
      * @return void
+     * @since 1.0.0
      */
     public function set_price_new( $price_new ) {
         $this->price_new = (int) $price_new;
+    }
+
+    /**
+     * @param integer $price_orig
+     * @return void
+     * @since 1.0.0
+     */
+    public function set_price_orig( $price_orig ) {
+        $this->price_orig = (int) $price_orig;
     }
 }
 

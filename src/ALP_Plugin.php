@@ -509,24 +509,24 @@ class ALP_Plugin {
                 $post->ID,
                 $post->post_title,
                 get_post_meta( $post->ID, 'price', true ),
+                get_post_meta( $post->ID, 'price_orig', true ),
                 get_post_meta( $post->ID, 'price_reduce', true ),
-                get_post_meta( $post->ID, 'price_reduce_days', true ),
-                get_post_meta( $post->ID, 'price_orig', true )
+                get_post_meta( $post->ID, 'price_reduce_days', true )
             );
 
             $price_final = $item->get_price_final();
 
             // Check if is needed to lower price
-            if( $item->price > $price_final ) {
+            if( $item->get_price() > $price_final ) {
                 // Lower price
                 $per_day_reduce = $item->get_per_day_reduce();
-                $_price_new = ceil( ( $item->price - $per_day_reduce ) );
+                $_price_new = ceil( ( $item->get_price() - $per_day_reduce ) );
                 $price_new = ( $_price_new < $price_final ) ? $price_final : $_price_new;
                 update_post_meta( $post->ID, 'price', $price_new );
 
                 // Save log
                 $log_items[] = new ALP_Log_Table_Item(
-                    null, $datetime, $item->id, $item->price_orig, $item->price
+                    null, $datetime, $item->get_id(), $item->get_price_orig(), $item->get_price()
                 );
             }
         }

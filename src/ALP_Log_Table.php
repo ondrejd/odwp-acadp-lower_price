@@ -107,7 +107,7 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_created( ALP_Log_Table_Item $item ) {
-        return ( new DateTime( $item->get_created() ) )->format( 'j.n.Y H:i' );
+        return $item->get_created( true );
     }
 
     /**
@@ -127,14 +127,17 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_post_title( ALP_Log_Table_Item $item ) {
-        $html = '<span style="color: #f30;">---</a>';
-        $post = get_post( $item->get_post_id() );
+        $title = $item->get_post_title();
+        $html = '';
 
-        if( ( $post instanceof WP_Post ) ) {
+        if( empty( $title ) ) {
+            $html = '<span style="color: #f30;">---</a>';
+        }
+        else {
             $html = sprintf(
                     '<a href="%s">%s</a>',
-                    admin_url( 'post.php?post=1&action=edit' ),
-                    $post->post_title
+                    admin_url( 'post.php?post=' . $item->get_post_id() . '&action=edit' ),
+                    $title
             );
         }
 
@@ -172,10 +175,10 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_diff( ALP_Log_Table_Item $item ) {
-        $msg = __( '<span style="">%d Kč</span>', ALP_SLUG );
-        $diff = $item->get_price_orig() - $item->get_price_new();
-
-        return sprintf( $msg, $diff );
+        return sprintf(
+            __( '<span style="">%d Kč</span>', ALP_SLUG ),
+            $item->get_price_diff()
+        );
     }
 
     /**
@@ -253,7 +256,10 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function get_hideable_columns() {
-        $columns = [];
+        $columns = [
+            'post_title' => __( 'Inzerát', ALP_SLUG ),
+            'price_diff'  => __( 'Rozdíl', ALP_SLUG ),
+        ];
         return $columns;
     }
 
@@ -325,7 +331,9 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function get_hidden_columns() {
-        return [];
+        return [
+            'post_title',
+        ];
     }
 
     /**
@@ -335,8 +343,13 @@ class ALP_Log_Table extends WP_List_Table {
      */
     public function get_sortable_columns() {
         $columns = [
-            'log_id'  => ['log_id', false],
-            'post_id' => ['post_id', false],
+            'log_id'     => ['log_id', false],
+            'post_id'    => ['post_id', false],
+            'post_title' => ['post_title', false],
+            'created'    => ['created', false],
+            'price_orig' => ['price_orig', false],
+            'price_new'  => ['price_new', false],
+            'price_diff' => ['price_diff', false],
         ];
         return $columns;
     }
@@ -436,22 +449,21 @@ class ALP_Log_Table extends WP_List_Table {
      */
     protected function usort_reorder( ALP_Log_Table_Item $a, ALP_Log_Table_Item $b ) {
         extract( $this->get_order_args() );
-        $val1 = null;
-        $val2 = null;
+        $result = null;
 
-        switch( $orderby ) {
-            case 'log_id':
-                $val1 = $a->get_log_id();
-                $val2 = $b->get_log_id();
-                break;
-
-            case 'post_id':
-                $val1 = $a->get_post_id();
-                $val2 = $b->get_post_id();
-                break;
+        // numbers
+        if( in_array( $orderby, ['log_id', 'post_id', 'price_orig', 'price_new', 'price_diff'] ) ) {
+            $method = "get_{$orderby}";
+            $va = $a->{$method}();
+            $vb = $b->{$method}();
+            $result = ( $va < $vb ) ? -1 : ( ( $va > $vb ) ? 1 : 0 );
+        }
+        // strings
+        else if( in_array( $orderby, ['post_title', 'created'] ) ) {
+            $method = "get_{$orderby}";
+            $result = strcmp( $a->{$method}(), $b->{$method}() );
         }
 
-        $result = strcmp( $val1, $val2 );
 
         return ( $order === 'asc' ) ? $result : -$result;
     }
