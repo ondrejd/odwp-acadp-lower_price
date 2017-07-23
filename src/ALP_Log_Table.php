@@ -79,52 +79,6 @@ class ALP_Log_Table extends WP_List_Table {
     }
 
     /**
-     * Returns default options for the table.
-     * @return array
-     * @since 1.0.0
-     */
-    public static function get_default_options() {
-        return [
-            'per_page'    => self::DEFAULT_PER_PAGE,
-            'sort_col'    => self::DEFAULT_SORT_COL,
-            'sort_dir'    => self::DEFAULT_SORT_DIR,
-        ];
-    }
-
-    /**
-     * Returns options for the table.
-     * @return array
-     * @since 1.0.0
-     */
-    public static function get_options() {
-        $user = get_current_user_id();
-
-        $per_page = get_user_meta( $user, ALP_Log_Screen::SLUG . '-per_page', true );
-        if( strlen( $per_page ) == 0 ) {
-            $per_page = self::DEFAULT_PER_PAGE;
-        }
-
-        $sort_col = get_user_meta( $user, ALP_Log_Screen::SLUG . '-sort_col', true );
-        if( strlen( $sort_col ) == 0 ) {
-            $sort_col = self::DEFAULT_SORT_COL;
-        }
-
-        $sort_dir = get_user_meta( $user, ALP_Log_Screen::SLUG . '-sort_dir', true );
-        if( strlen( $sort_dir ) == 0 ) {
-            $sort_dir = self::DEFAULT_SORT_DIR;
-        }
-
-        $defaults = self::get_default_options();
-        $currents = [
-            'per_page' => ( int ) $per_page,
-            'sort_col' => $sort_col,
-            'sort_dir' => $sort_dir,
-        ];
-
-        return array_merge( $defaults, $currents );
-    }
-
-    /**
      * Renders checkbox column.
      * @param ALP_Log_Table_Item $item
      * @return string
@@ -167,6 +121,27 @@ class ALP_Log_Table extends WP_List_Table {
     }
 
     /**
+     * @internal Renders contents of "post_title" column.
+     * @param ALP_Log_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_post_title( ALP_Log_Table_Item $item ) {
+        $html = '<span style="color: #f30;">---</a>';
+        $post = get_post( $item->get_post_id() );
+
+        if( ( $post instanceof WP_Post ) ) {
+            $html = sprintf(
+                    '<a href="%s">%s</a>',
+                    admin_url( 'post.php?post=1&action=edit' ),
+                    $post->post_title
+            );
+        }
+
+        return $html;
+    }
+
+    /**
      * @internal Renders contents of "price_orig" column.
      * @param ALP_Log_Table_Item $item
      * @return string
@@ -191,6 +166,19 @@ class ALP_Log_Table extends WP_List_Table {
     }
 
     /**
+     * @internal Renders contents of "price_diff" column.
+     * @param ALP_Log_Table_Item $item
+     * @return string
+     * @since 1.0.0
+     */
+    public function column_price_diff( ALP_Log_Table_Item $item ) {
+        $msg = __( '<span style="">%d Kč</span>', ALP_SLUG );
+        $diff = $item->get_price_orig() - $item->get_price_new();
+
+        return sprintf( $msg, $diff );
+    }
+
+    /**
      * Custom method for displaying rows.
      * @return void
      * @since 1.0.0
@@ -211,7 +199,9 @@ class ALP_Log_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function get_bulk_actions() {
-        $actions = [];
+        $actions = [
+            'delete' => __( 'Smazat', ALP_SLUG ),
+        ];
         return $actions;
     }
 
@@ -223,13 +213,38 @@ class ALP_Log_Table extends WP_List_Table {
     public function get_columns() {
         $columns = [
             'cb'         => '<input type="checkbox">',
-            'log_id'     => __( 'ID záznamu', ALP_SLUG ),
+            'log_id'     => __( '<abbr title="ID záznamu">IDZ</abbr>', ALP_SLUG ),
+            'post_id'    => __( '<abbr title="ID inzerátu">IDI</abbr>', ALP_SLUG ),
+            'post_title' => __( 'Inzerát', ALP_SLUG ),
             'created'    => __( 'Vytvořeno', ALP_SLUG ),
-            'post_id'    => __( 'ID inzerátu', ALP_SLUG ),
             'price_orig' => __( 'Původní cena', ALP_SLUG ),
             'price_new'  => __( 'Nová cena', ALP_SLUG ),
+            'price_diff'  => __( 'Rozdíl', ALP_SLUG ),
         ];
         return $columns;
+    }
+
+    /**
+     * Get data.
+     * @global wpdb $wpdb
+     * @return array
+     * @since 1.0.0
+     */
+    public function get_data() {
+        return ALP_Log_DbTable::select_all();
+    }
+
+    /**
+     * Returns default options for the table.
+     * @return array
+     * @since 1.0.0
+     */
+    public static function get_default_options() {
+        return [
+            'per_page'    => self::DEFAULT_PER_PAGE,
+            'sort_col'    => self::DEFAULT_SORT_COL,
+            'sort_dir'    => self::DEFAULT_SORT_DIR,
+        ];
     }
 
     /**
@@ -240,6 +255,68 @@ class ALP_Log_Table extends WP_List_Table {
     public function get_hideable_columns() {
         $columns = [];
         return $columns;
+    }
+
+    /**
+     * Returns options for the table.
+     * @return array
+     * @since 1.0.0
+     */
+    public static function get_options() {
+        $user = get_current_user_id();
+
+        $per_page = get_user_meta( $user, ALP_Log_Screen::SLUG . '-per_page', true );
+        if( strlen( $per_page ) == 0 ) {
+            $per_page = self::DEFAULT_PER_PAGE;
+        }
+
+        $sort_col = get_user_meta( $user, ALP_Log_Screen::SLUG . '-sort_col', true );
+        if( strlen( $sort_col ) == 0 ) {
+            $sort_col = self::DEFAULT_SORT_COL;
+        }
+
+        $sort_dir = get_user_meta( $user, ALP_Log_Screen::SLUG . '-sort_dir', true );
+        if( strlen( $sort_dir ) == 0 ) {
+            $sort_dir = self::DEFAULT_SORT_DIR;
+        }
+
+        $defaults = self::get_default_options();
+        $currents = [
+            'per_page' => ( int ) $per_page,
+            'sort_col' => $sort_col,
+            'sort_dir' => $sort_dir,
+        ];
+
+        return array_merge( $defaults, $currents );
+    }
+
+    /**
+     * @internal Returns array with sorting arguments ['orderby' => 'id', 'order' => 'asc'].
+     * @return array
+     * @since 1.0.0
+     */
+    private function get_order_args() {
+        $options  = self::get_options();
+        $orderby = filter_input( INPUT_POST, ALP_Log_Screen::SLUG . '-sort_col' );
+        $order = filter_input( INPUT_POST, ALP_Log_Screen::SLUG . '-sort_dir' );
+
+        if( empty( $orderby ) ) {
+            $orderby = filter_input( INPUT_GET, 'orderby' );
+        }
+
+        if( empty( $orderby ) ) {
+            $orderby = $options['sort_col'];
+        }
+
+        if( empty( $order ) ) {
+            $order = filter_input( INPUT_GET, 'order' );
+        }
+
+        if( empty( $order ) ) {
+            $order = $options['sort_dir'];
+        }
+
+        return ['order' => $order, 'orderby' => $orderby];
     }
 
     /**
@@ -309,51 +386,45 @@ class ALP_Log_Table extends WP_List_Table {
     }
 
     /**
-     * @internal Returns array with sorting arguments ['orderby' => 'id', 'order' => 'asc'].
-     * @return array
-     * @since 1.0.0
-     */
-    private function get_order_args() {
-        $options  = self::get_options();
-        $orderby = filter_input( INPUT_POST, ALP_Log_Screen::SLUG . '-sort_col' );
-        $order = filter_input( INPUT_POST, ALP_Log_Screen::SLUG . '-sort_dir' );
-
-        if( empty( $orderby ) ) {
-            $orderby = filter_input( INPUT_GET, 'orderby' );
-        }
-
-        if( empty( $orderby ) ) {
-            $orderby = $options['sort_col'];
-        }
-
-        if( empty( $order ) ) {
-            $order = filter_input( INPUT_GET, 'order' );
-        }
-
-        if( empty( $order ) ) {
-            $order = $options['sort_dir'];
-        }
-
-        return ['order' => $order, 'orderby' => $orderby];
-    }
-
-    /**
      * Process bulk actions.
      * @return void
      * @since 1.0.0
+     * @todo Check "_wpnonce"!
      */
     public function process_bulk_actions() {
-        // ...
-    }
+        // Get action
+        $action = filter_input( INPUT_POST, 'action' ); // action on top of the table
+        if( empty( $action ) ) {
+            $action = filter_input( INPUT_POST, 'action2' ); // action on bottom of the table
+        }
 
-    /**
-     * Get data.
-     * @global wpdb $wpdb
-     * @return array
-     * @since 1.0.0
-     */
-    public function get_data() {
-        return ALP_Log_DbTable::select_all();
+        // No valid action selected, return
+        if( ! in_array( $action, ['delete'] ) ) {
+            return;
+        }
+
+        // Get selected log records
+        $log_id = filter_input( INPUT_POST, 'log_id', FILTER_DEFAULT , FILTER_REQUIRE_ARRAY );
+
+        // No records selected, print admin notice and return
+        if( empty( $log_id ) || !is_array( $log_id ) ) {
+            ALP_Plugin::print_admin_notice( __( 'Nevybrali jste žádné záznamy k vymazání!', ALP_SLUG ), 'warning' );
+            return;
+        }
+
+        // Remove selected records
+        $ret = ALP_Log_DbTable::remove( $log_id );
+
+        // Print output admin notice
+        if( $ret === false ) {
+            ALP_Plugin::print_admin_notice( __( 'Při mazání vybraných záznamů z databáze došlo k chybě!', ALP_SLUG ), 'error' );
+        }
+        else if( $ret == 0 ) {
+            ALP_Plugin::print_admin_notice( __( 'Žádné záznamy z vybraných nebyly smazány.', ALP_SLUG ), 'info' );
+        }
+        else {
+            ALP_Plugin::print_admin_notice( sprintf( __( 'Vybrané záznamy byly úpěšně smazány (počet smazaných položek: <b>%s</b>).', ALP_SLUG ), $ret ), 'success' );
+        }
     }
 
     /**

@@ -20,13 +20,48 @@ if( ! class_exists( 'ALP_Log_DbTable' ) ) :
  */
 class ALP_Log_DbTable {
     /**
-     * @return string Returns table name.
+     * @return string Returns name of the table.
      * @global wpdb $wpdb
      * @since 1.0.0
      */
     public static function get_table_name() {
         global $wpdb;
         return $wpdb->prefix . ALP_SLUG . '_log';
+    }
+
+    /**
+     * @global wpdb $wpdb
+     * @return string Returns size of data in MB of the table (e.g. "0.2 MB").
+     * @since 1.0.0
+     */
+    public static function get_table_size() {
+        global $wpdb;
+
+        $table_name = self::get_table_name();
+        $size = sprintf(
+                '<span style="color: #f30;">%s</span>',
+                __( 'nezjištěno', ALP_SLUG )
+        );
+
+        try {
+            $ret = $wpdb->get_col(
+                "SELECT round(((data_length + index_length) / 1024 / 1024), 2) " .
+                "FROM information_schema.TABLES " .
+                "WHERE " .
+                "	table_schema = \"wordpress\" AND " .
+                "   table_name = \"{$table_name}\"; "
+            );
+
+            if( is_array( $ret ) ) {
+                if( count( $ret ) == 1 ) {
+                    $size = $ret[0];
+                }
+            }
+        } catch( Exception $e ) {
+            // ...
+        }
+
+        return "{$size} MB";
     }
 
     /**
@@ -105,8 +140,8 @@ class ALP_Log_DbTable {
     /**
      * Removes log record
      * @global wpdb $wpdb
-     * @param ALP_Log_Table_Item|array|integer $log Can be single {@see ALP_Log_Table_Item}, array of {@see ALP_Log_Table_Item}, array of integers (<code>log_id</code>) or just single <code>log_id</code>.
-     * @return integer Returns count of removed items.
+     * @param array|integer $log Can be single ID or array of IDs.
+     * @return boolean|integer Returns FALSE if SQL query went wrong or count of removed items.
      * @since 1.0.0
      */
     public static function remove( $log ) {
@@ -114,8 +149,18 @@ class ALP_Log_DbTable {
 
         $table_name = self::get_table_name();
         $count = 0;
+        $query = "DELETE FROM {$table_name} WHERE `log_id` = " . intval( $arr_str ) ." LIMIT 1 ";
 
-        // ...
+        if( is_array( $log ) ) {
+            $arr_str = implode( $log, ',' );
+            $query = "DELETE FROM {$table_name} WHERE `log_id` IN ({$arr_str}) ";
+        }
+
+        try {
+            $count = $wpdb->query( $query );
+        } catch( Exception $e ) {
+            return false;
+        }
 
         return $count;
     }

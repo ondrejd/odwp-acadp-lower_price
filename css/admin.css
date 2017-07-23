@@ -27,3 +27,9 @@ table.inzerty .column-price_reduce_days {
     width: 140px !important;
 }
 
+table.zznamy .column-log_id, table.zznamy .column-post_id {
+    width: 80px;
+}
+table.zznamy .column-created {
+    width: 140px;
+}
