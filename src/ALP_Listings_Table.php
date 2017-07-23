@@ -125,7 +125,7 @@ class ALP_Listings_Table extends WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="acadp_item[]" value="%s">', $item->id
+            '<input type="checkbox" name="acadp_item[]" value="%s">', $item->get_id()
         );
     }
 
@@ -136,7 +136,7 @@ class ALP_Listings_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_id( ALP_Listings_Table_Item $item ) {
-        return $item->id;
+        return $item->get_id();
     }
 
     /**
@@ -146,7 +146,7 @@ class ALP_Listings_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_title( ALP_Listings_Table_Item $item ) {
-        return $item->title;
+        return $item->get_title();
     }
 
     /**
@@ -156,17 +156,17 @@ class ALP_Listings_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price( ALP_Listings_Table_Item $item ) {
-        if( $item->price == $item->price_orig ) {
+        if( $item->get_price() == $item->get_price_orig() ) {
             $msg = __( '<span style="color: blue;">%s Kč</span>', ALP_SLUG );
         }
-        else if( $item->price > $item->get_price_final() ) {
+        else if( $item->get_price() > $item->get_price_final() ) {
             $msg = __( '<span style="color: #f30;">%s Kč</span>', ALP_SLUG );
         }
-        else if( $item->price == $item->get_price_final() ) {
+        else if( $item->get_price() == $item->get_price_final() ) {
             $msg = __( '<span style="color: green;">%s Kč</span>', ALP_SLUG );
         }
 
-        return sprintf( $msg, $item->price );
+        return sprintf( $msg, $item->get_price() );
     }
 
     /**
@@ -200,7 +200,7 @@ class ALP_Listings_Table extends WP_List_Table {
      */
     public function column_price_orig( ALP_Listings_Table_Item $item ) {
         $msg = __( '%s Kč', ALP_SLUG );
-        return sprintf( $msg, $item->price_orig );
+        return sprintf( $msg, $item->get_price_orig() );
     }
 
     /**
@@ -210,8 +210,7 @@ class ALP_Listings_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_reduce( ALP_Listings_Table_Item $item ) {
-        $msg = __( '%s %%', ALP_SLUG );
-        return sprintf( $msg, $item->price_reduce );
+        return $item->get_price_reduce() . ' %';
     }
 
     /**
@@ -232,9 +231,9 @@ class ALP_Listings_Table extends WP_List_Table {
      * @since 1.0.0
      */
     public function column_price_reduce_days( ALP_Listings_Table_Item $item ) {
-        $total_days     = (int) $item->price_reduce_days;
+        $total_days     = (int) $item->get_price_reduce_days();
         $per_day_reduce = $item->get_per_day_reduce();
-        $current_reduce = $item->price_orig - $item->price;
+        $current_reduce = $item->get_price_orig() - $item->get_price();
         $current_days   = round( ( $current_reduce / $per_day_reduce ) );
         $message        = '<span title="Hotovo dnů z celkového počtu dnů."><b>%s</b> z <b>%s</b> dnů</span>';
 
@@ -282,7 +281,7 @@ class ALP_Listings_Table extends WP_List_Table {
             'price_reduce'      => __( '<abbr title="Snížení v %">S</abbr>', ALP_SLUG ),
             'price_diff_final'  => __( 'Snížení (cena)', ALP_SLUG ),
             'price_reduce_days' => __( 'Snížení (dny)', ALP_SLUG ),
-            'per_day_reduce'  => __( '<abbr title="Snížení za den v Kč">SZD</abbr>', ALP_SLUG ),
+            'per_day_reduce'    => __( '<abbr title="Snížení za den v Kč">SZD</abbr>', ALP_SLUG ),
         ];
         return $columns;
     }
@@ -453,9 +452,9 @@ class ALP_Listings_Table extends WP_List_Table {
                     $post->ID,
                     $post->post_title,
                     get_post_meta( $post->ID, 'price', true ),
+                    get_post_meta( $post->ID, 'price_orig', true ),
                     get_post_meta( $post->ID, 'price_reduce', true ),
-                    get_post_meta( $post->ID, 'price_reduce_days', true ),
-                    get_post_meta( $post->ID, 'price_orig', true )
+                    get_post_meta( $post->ID, 'price_reduce_days', true )
             );
         }
 
@@ -471,42 +470,20 @@ class ALP_Listings_Table extends WP_List_Table {
      */
     protected function usort_reorder( ALP_Listings_Table_Item $a, ALP_Listings_Table_Item $b ) {
         extract( $this->get_order_args() );
-        $val1 = null;
-        $val2 = null;
+        $result = null;
 
-        switch( $orderby ) {
-            case 'id':
-                $val1 = $a->id;
-                $val2 = $b->id;
-                break;
-
-            case 'title':
-                $val1 = $a->title;
-                $val2 = $b->title;
-                break;
-
-            case 'price':
-                $val1 = $a->price;
-                $val2 = $b->price;
-                break;
-
-            case 'price_reduce':
-                $val1 = $a->price_reduce;
-                $val2 = $b->price_reduce;
-                break;
-
-            case 'price_reduce':
-                $val1 = $a->price_reduce_days;
-                $val2 = $b->price_reduce_days;
-                break;
-
-            case 'price_orig':
-                $val1 = $a->price_orig;
-                $val2 = $b->price_orig;
-                break;
+        // numbers
+        if( in_array( $orderby, ['id', 'price', 'price_reduce', 'price_reduce_days', 'price_orig'] ) ) {
+            $method = "get_{$orderby}";
+            $va = $a->{$method}();
+            $vb = $b->{$method}();
+            $result = ( $va < $vb ) ? -1 : ( ( $va > $vb ) ? 1 : 0 );
         }
-
-        $result = strcmp( $val1, $val2 );
+        // strings
+        else if( in_array( $orderby, ['title'] ) ) {
+            $method = "get_{$orderby}";
+            $result = strcmp( $a->{$method}(), $b->{$method}() );
+        }
 
         return ( $order === 'asc' ) ? $result : -$result;
     }
