@@ -13,11 +13,11 @@ if( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<form action="options.php" method="post">
-    <h2><?php _e( 'Nastavení pro plugin Pravidelné snižování cen', ALP_SLUG ) ?></h2>
-<?php
+<div class="wrap">
+    <h1><?php _e( 'Nastavení pro plugin Pravidelné snižování cen', ALP_SLUG ) ?></h1>
+    <form action="options.php" method="post"><?php
         settings_fields( ALP_SLUG );
         do_settings_sections( ALP_SLUG );
         submit_button();
-?>
-</form>
+    ?></form>
+</div>
