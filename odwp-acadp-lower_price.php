@@ -8,7 +8,7 @@
  * Author URI: https://ondrejd.com/
  * License: GPLv3
  * Requires at least: 4.7
- * Tested up to: 4.8
+ * Tested up to: 4.8.1
  * Tags: custom plugin
  * Donate link: https://www.paypal.me/ondrejd
  *
@@ -47,9 +47,11 @@ defined( 'ALP_PATH' ) || define( 'ALP_PATH', dirname( __FILE__ ) . '/' );
 defined( 'ALP_FILE' ) || define( 'ALP_FILE', __FILE__ );
 defined( 'ALP_LOG' )  || define( 'ALP_LOG', WP_CONTENT_DIR . '/debug.log' );
 
+
 if( ! function_exists( 'odwpalp_check_requirements' ) ) :
     /**
      * Checks requirements of our plugin.
+     * @global string $wp_version
      * @param array $requirements
      * @return array
      * @since 1.0.0
@@ -113,7 +115,7 @@ if( ! function_exists( 'odwpalp_check_requirements' ) ) :
         return $errors;
     }
 endif;
-defined( 'ALP_NAME' ) || define( 'ALP_NAME', 'odwp-acadp-lower_price' );
+
 
 if( ! function_exists( 'odwpalp_deactivate_raw' ) ) :
     /**
@@ -133,29 +135,6 @@ if( ! function_exists( 'odwpalp_deactivate_raw' ) ) :
     }
 endif;
 
-/**
- * Errors from the requirements check
- * @var array
- */
-$odwpalp_errs = odwpalp_check_requirements( [
-    'php' => [
-        // Enter minimum PHP version you needs.
-        'version' => '5.6',
-        // Enter extensions that your plugin needs
-        'extensions' => [
-            //'gd',
-        ],
-    ],
-    'wp' => [
-        // Enter minimum WP version you need
-        'version' => '4.7',
-        // Enter WP plugins that your plugin needs
-        'plugins' => [
-            //'woocommerce/woocommerce.php',
-            'advanced-classifieds-and-directory-pro/acadp.php',
-        ],
-    ],
-] );
 
 if( ! function_exists( 'odwpalp_error_log' ) ) :
     /**
@@ -177,6 +156,7 @@ if( ! function_exists( 'odwpalp_error_log' ) ) :
     }
 endif;
 
+
 if( ! function_exists( 'odwpalp_write_log' ) ) :
     /**
      * Write record to the `wp-content/debug.log` file.
@@ -192,6 +172,47 @@ if( ! function_exists( 'odwpalp_write_log' ) ) :
         }
     }
 endif;
+
+
+if( ! function_exists( 'readonly' ) ) :
+    /**
+     * Prints HTML readonly attribute. It's an addition to WP original
+     * functions {@see disabled()} and {@see checked()}.
+     * @param mixed $value
+     * @param mixed $current (Optional.) Defaultly TRUE.
+     * @return string
+     * @since 1.0.0
+     */
+    function readonly( $current, $value = true ) {
+        if( $current == $value ) {
+            echo ' readonly';
+        }
+    }
+endif;
+
+
+/**
+ * Errors from the requirements check
+ * @var array
+ */
+$odwpalp_errs = odwpalp_check_requirements( [
+    'php' => [
+        // Enter minimum PHP version you needs
+        'version' => '5.6',
+        // Enter extensions that your plugin needs
+        'extensions' => [
+            //'gd',
+        ],
+    ],
+    'wp' => [
+        // Enter minimum WP version you need
+        'version' => '4.7',
+        // Enter WP plugins that your plugin needs
+        'plugins' => [
+            'advanced-classifieds-and-directory-pro/acadp.php',
+        ],
+    ],
+] );
 
 // Check if requirements are met or not
 if( count( $odwpalp_errs ) > 0 ) {
