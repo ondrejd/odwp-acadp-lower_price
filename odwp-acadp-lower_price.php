@@ -45,7 +45,6 @@ defined( 'ALP_SLUG' ) || define( 'ALP_SLUG', 'odwpalp' );
 defined( 'ALP_NAME' ) || define( 'ALP_NAME', 'odwp-acadp-lower_price' );
 defined( 'ALP_PATH' ) || define( 'ALP_PATH', dirname( __FILE__ ) . '/' );
 defined( 'ALP_FILE' ) || define( 'ALP_FILE', __FILE__ );
-defined( 'ALP_LOG' )  || define( 'ALP_LOG', WP_CONTENT_DIR . '/debug.log' );
 
 
 if( ! function_exists( 'odwpalp_check_requirements' ) ) :
@@ -132,44 +131,6 @@ if( ! function_exists( 'odwpalp_deactivate_raw' ) ) :
             }
         }
         update_option( 'active_plugins', $out );
-    }
-endif;
-
-
-if( ! function_exists( 'odwpalp_error_log' ) ) :
-    /**
-     * @internal Write message to the `wp-content/debug.log` file.
-     * @param string $message
-     * @param integer $message_type (Optional.)
-     * @param string $destination (Optional.)
-     * @param string $extra_headers (Optional.)
-     * @return void
-     * @since 1.0.0
-     */
-    function odwpalp_error_log( string $message, int $message_type = 0, string $destination = null, string $extra_headers = '' ) {
-        if( ! file_exists( ALP_LOG ) || ! is_writable( ALP_LOG ) ) {
-            return;
-        }
-
-        $record = '[' . date( 'd-M-Y H:i:s', time() ) . ' UTC] ' . $message;
-        file_put_contents( ALP_LOG, PHP_EOL . $record, FILE_APPEND );
-    }
-endif;
-
-
-if( ! function_exists( 'odwpalp_write_log' ) ) :
-    /**
-     * Write record to the `wp-content/debug.log` file.
-     * @param mixed $log
-     * @return void
-     * @since 1.0.0
-     */
-    function odwpalp_write_log( $log ) {
-        if( is_array( $log ) || is_object( $log ) ) {
-            odwpalp_error_log( print_r( $log, true ) );
-        } else {
-            odwpalp_error_log( $log );
-        }
     }
 endif;
 
